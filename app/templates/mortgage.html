@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}Mortgage Calculator — My Blog{% endblock %}
+
+{% block content %}
+<div class="mortgage-page">
+    <div class="page-header">
+        <h1>Mortgage calculator</h1>
+    </div>
+
+    <div class="mortgage-layout">
+        <!-- Input form -->
+        <div class="mortgage-form-card">
+            <form method="POST" action="/mortgage">
+                <div class="form-group">
+                    <label for="principal">Loan amount ($)</label>
+                    <input type="number" id="principal" name="principal" required
+                           min="1000" step="1000" placeholder="300000"
+                           value="{{ principal if principal else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="annual_rate">Annual interest rate (%)</label>
+                    <input type="number" id="annual_rate" name="annual_rate" required
+                           min="0.1" max="30" step="0.01" placeholder="6.5"
+                           value="{{ annual_rate if annual_rate else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="years">Loan term (years)</label>
+                    <input type="number" id="years" name="years" required
+                           min="1" max="30" step="1" placeholder="30"
+                           value="{{ years if years else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="check_year">Check balance after (years)</label>
+                    <input type="number" id="check_year" name="check_year" required
+                           min="1" max="30" step="1" placeholder="5"
+                           value="{{ check_year if check_year else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="extra_repayment">Extra monthly repayment ($)
+                        <span class="hint">(optional)</span>
+                    </label>
+                    <input type="number" id="extra_repayment" name="extra_repayment"
+                           min="0" step="50" placeholder="0"
+                           value="{{ extra_repayment if extra_repayment else '' }}">
+                </div>
+
+                <button type="submit" class="btn" style="width:100%">Calculate</button>
+            </form>
+        </div>
+
+        <!-- Summary cards -->
+        {% if schedule %}
+        <div class="mortgage-results">
+
+            <!-- Savings banner -->
+            {% if extra_repayment and extra_repayment > 0 and months_saved > 0 %}
+            <div class="savings-banner">
+                <div class="savings-icon">🎉</div>
+                <div>
+                    <p class="savings-title">By paying an extra ${{ "{:,.2f}".format(extra_repayment) }}/month you save:</p>
+                    <p class="savings-highlight">
+                        ${{ "{:,.2f}".format(interest_saved) }} in interest
+                        &nbsp;·&nbsp;
+                        {% if years_saved > 0 %}{{ years_saved }} yr{% if years_saved != 1 %}s{% endif %}{% endif %}
+                        {% if remaining_months_saved > 0 %}{{ remaining_months_saved }} month{% if remaining_months_saved != 1 %}s{% endif %}{% endif %}
+                        off your loan
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Summary grid -->
+            <div class="mortgage-summary">
+                <div class="summary-card color-0">
+                    <p class="summary-label">Monthly payment</p>
+                    <p class="summary-value">${{ "{:,.2f}".format(monthly_payment) }}</p>
+                    {% if extra_repayment and extra_repayment > 0 %}
+                    <p class="summary-sub">+ ${{ "{:,.2f}".format(extra_repayment) }} extra</p>
+                    {% endif %}
+                </div>
+
+                <div class="summary-card color-1">
+                    <p class="summary-label">Balance after {{ check_year }} yr{% if check_year != 1 %}s{% endif %}</p>
+                    <p class="summary-value">${{ "{:,.2f}".format(balance_at_check_standard) }}</p>
+                    {% if extra_repayment and extra_repayment > 0 %}
+                    <p class="summary-sub saving">With extra: ${{ "{:,.2f}".format(balance_at_check_accelerated) }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="summary-card color-2">
+                    <p class="summary-label">Total interest</p>
+                    <p class="summary-value">${{ "{:,.2f}".format(total_interest_standard) }}</p>
+                    {% if extra_repayment and extra_repayment > 0 %}
+                    <p class="summary-sub saving">With extra: ${{ "{:,.2f}".format(total_interest_accelerated) }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="summary-card color-3">
+                    <p class="summary-label">Total cost</p>
+                    <p class="summary-value">${{ "{:,.2f}".format(total_cost) }}</p>
+                    {% if extra_repayment and extra_repayment > 0 %}
+                    <p class="summary-sub saving">With extra: ${{ "{:,.2f}".format(total_cost_accelerated) }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Amortization table -->
+    {% if schedule %}
+    <div class="amortization-wrapper">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <h2 style="font-size:1.2rem;font-weight:600">
+                {% if extra_repayment and extra_repayment > 0 %}
+                Accelerated schedule
+                {% else %}
+                Full amortization schedule
+                {% endif %}
+            </h2>
+            <span style="font-size:0.85rem;color:var(--muted)">
+                Showing months {{ (page - 1) * per_page + 1 }} — {{ schedule[-1].month }} of {{ actual_months }}
+            </span>
+        </div>
+
+        <div class="table-scroll">
+            <table class="amortization-table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Payment</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        {% if extra_repayment and extra_repayment > 0 %}
+                        <th>Extra</th>
+                        {% endif %}
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in schedule %}
+                    <tr class="{% if row.year == check_year %}highlight-row{% endif %}">
+                        <td>{{ row.month }}</td>
+                        <td>{{ row.year }}</td>
+                        <td>${{ "{:,.2f}".format(monthly_payment) }}</td>
+                        <td>${{ "{:,.2f}".format(row.principal) }}</td>
+                        <td>${{ "{:,.2f}".format(row.interest) }}</td>
+                        {% if extra_repayment and extra_repayment > 0 %}
+                        <td style="color:var(--teal);font-weight:500">${{ "{:,.2f}".format(row.extra) }}</td>
+                        {% endif %}
+                        <td>${{ "{:,.2f}".format(row.balance) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+        <div class="mortgage-pagination">
+            <form method="POST" action="/mortgage">
+                <input type="hidden" name="principal" value="{{ principal }}">
+                <input type="hidden" name="annual_rate" value="{{ annual_rate }}">
+                <input type="hidden" name="years" value="{{ years }}">
+                <input type="hidden" name="check_year" value="{{ check_year }}">
+                <input type="hidden" name="extra_repayment" value="{{ extra_repayment }}">
+                <input type="hidden" name="page" value="1">
+                <button type="submit" class="btn btn-outline" {% if page == 1 %}disabled{% endif %}>« First</button>
+            </form>
+
+            <form method="POST" action="/mortgage">
+                <input type="hidden" name="principal" value="{{ principal }}">
+                <input type="hidden" name="annual_rate" value="{{ annual_rate }}">
+                <input type="hidden" name="years" value="{{ years }}">
+                <input type="hidden" name="check_year" value="{{ check_year }}">
+                <input type="hidden" name="extra_repayment" value="{{ extra_repayment }}">
+                <input type="hidden" name="page" value="{{ page - 1 }}">
+                <button type="submit" class="btn btn-outline" {% if page == 1 %}disabled{% endif %}>← Prev</button>
+            </form>
+
+            <span class="pagination-info">Page {{ page }} of {{ total_pages }}</span>
+
+            <form method="POST" action="/mortgage">
+                <input type="hidden" name="principal" value="{{ principal }}">
+                <input type="hidden" name="annual_rate" value="{{ annual_rate }}">
+                <input type="hidden" name="years" value="{{ years }}">
+                <input type="hidden" name="check_year" value="{{ check_year }}">
+                <input type="hidden" name="extra_repayment" value="{{ extra_repayment }}">
+                <input type="hidden" name="page" value="{{ page + 1 }}">
+                <button type="submit" class="btn btn-outline" {% if page == total_pages %}disabled{% endif %}>Next →</button>
+            </form>
+
+            <form method="POST" action="/mortgage">
+                <input type="hidden" name="principal" value="{{ principal }}">
+                <input type="hidden" name="annual_rate" value="{{ annual_rate }}">
+                <input type="hidden" name="years" value="{{ years }}">
+                <input type="hidden" name="check_year" value="{{ check_year }}">
+                <input type="hidden" name="extra_repayment" value="{{ extra_repayment }}">
+                <input type="hidden" name="page" value="{{ total_pages }}">
+                <button type="submit" class="btn btn-outline" {% if page == total_pages %}disabled{% endif %}>Last »</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

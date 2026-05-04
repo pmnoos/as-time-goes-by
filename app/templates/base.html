@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}As Time Goes By{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        function getTheme() {
+            try {
+                return localStorage.getItem('theme') || 'light';
+            } catch(e) {
+                return 'light';
+            }
+        }
+        document.documentElement.setAttribute('data-theme', getTheme());
+    </script>
+</head>
+<body>
+ <nav class="navbar">
+    <a href="/" class="nav-brand">
+        <span class="nav-brand-main">As Time Goes By</span>
+        <span class="nav-brand-sub">Life · Retirement · Everything In Between</span>
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()" id="nav-toggle">☰</button>
+    <div class="nav-links" id="nav-links">
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/search">Search</a>
+        <a href="/mortgage">Mortgage</a>
+        <a href="/about">About</a>
+        <a href="/about-me">About Me</a>
+        {% if current_user %}
+            <a href="/posts/new">New Post</a>
+            <a href="/logout">Log out ({{ current_user.username }})</a>
+        {% else %}
+            <a href="/admin-login">⚙️</a>
+        {% endif %}
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Dark</button>
+    </div>
+</nav>
+
+<script>
+    function toggleNav() {
+        const links = document.getElementById('nav-links');
+        links.classList.toggle('nav-open');
+    }
+
+    // Close nav when a link is clicked
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('nav-links').classList.remove('nav-open');
+        });
+    });
+</script>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <span class="footer-brand">As Time Goes By</span>
+                <span class="footer-copy">&copy; {{ now.year }} All rights reserved.</span>
+                <span class="footer-tagline">Honest conversations about life, retirement and everything in between.</span>
+            </div>
+        <div class="footer-links">
+    <a href="/blog">Blog</a>
+    <a href="/search">Search</a>
+    <a href="/mortgage">Mortgage</a>
+    <a href="/about">About</a>
+    <a href="/about-me">About Me</a>
+</div>
+        </div>
+        <div class="footer-bottom">
+            <span>Built with ❤️ in Brisbane, Australia</span>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            try {
+                localStorage.setItem('theme', next);
+            } catch(e) {}
+            updateBtn(next);
+        }
+
+        function updateBtn(theme) {
+            const btn = document.getElementById('theme-btn');
+            btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+        }
+
+        updateBtn(getTheme());
+    </script>
+</body>
+</html>

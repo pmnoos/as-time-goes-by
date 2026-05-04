@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block title %}About — As Time Goes By{% endblock %}
+
+{% block content %}
+
+<!-- Hero banner -->
+<div class="about-hero-banner">
+    <div class="about-hero-overlay">
+        <h1>About This Blog</h1>
+        <p>Honest, practical conversations for Australians navigating retirement —
+        written by someone who is living it.</p>
+    </div>
+</div>
+
+<div class="about-page">
+
+    <!-- Mission statement -->
+    <div class="about-mission">
+        <div class="mission-icon">✍️</div>
+        <blockquote>
+            "There are very few places online where seniors can find honest, plain English
+            information about retirement written by someone actually living it.
+            As Time Goes By is my attempt to change that."
+        </blockquote>
+    </div>
+
+    <!-- Who is it for -->
+    <div class="about-section about-section-warm">
+        <h2>Who is this blog for?</h2>
+        <p>
+            This blog is written for Australians who are approaching retirement,
+            recently retired, or well into their retirement years. It's also for
+            the adult children of seniors who are trying to help their parents
+            navigate an increasingly complex world.
+        </p>
+        <p>
+            If you've ever felt overwhelmed by superannuation rules, confused by
+            Centrelink forms, unsure about aged care options, or simply looking
+            for honest information written in plain English — this blog is for you.
+        </p>
+    </div>
+
+    <!-- Topics -->
+    <div class="about-section">
+        <h2>What we cover</h2>
+        <div class="topics-grid">
+            <div class="topic-card">
+                <span class="topic-icon">💰</span>
+                <h3>Finance & Super</h3>
+                <p>Superannuation, aged pension, Centrelink, budgeting in retirement and making your money last.</p>
+            </div>
+            <div class="topic-card">
+                <span class="topic-icon">🏥</span>
+                <h3>Health & Wellbeing</h3>
+                <p>Medicare, private health insurance, aged care, staying active and mentally sharp.</p>
+            </div>
+            <div class="topic-card">
+                <span class="topic-icon">⚖️</span>
+                <h3>Legal & Estate</h3>
+                <p>Wills, power of attorney, enduring guardianship and the conversations families need to have.</p>
+            </div>
+            <div class="topic-card">
+                <span class="topic-icon">🏠</span>
+                <h3>Housing</h3>
+                <p>Downsizing, retirement villages, staying at home, reverse mortgages and the family home.</p>
+            </div>
+            <div class="topic-card">
+                <span class="topic-icon">📱</span>
+                <h3>Technology</h3>
+                <p>Staying connected, avoiding scams, online banking, smartphones and navigating the digital world safely.</p>
+            </div>
+            <div class="topic-card">
+                <span class="topic-icon">🤝</span>
+                <h3>Community & Life</h3>
+                <p>Staying socially connected, volunteering, travel, hobbies and finding purpose in retirement.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Philosophy -->
+    <div class="about-section about-section-purple">
+        <h2>Our philosophy</h2>
+        <p>
+            There is no shortage of financial product spruikers, insurance salespeople
+            and aged care marketers trying to reach seniors online. This blog is none
+            of those things.
+        </p>
+        <p>
+            Everything written here comes from personal experience and genuine research.
+            We don't accept advertising. We don't promote products. We don't get
+            commissions. We just share what we've learned, what helped us, and what
+            we wish someone had told us earlier.
+        </p>
+        <p>
+            Nothing on this blog constitutes financial, legal or medical advice.
+            We'll always encourage you to seek qualified professionals for your
+            specific situation — but we'll also help you ask better questions when
+            you get there.
+        </p>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="about-stats">
+        <div class="stat-item">
+            <span class="stat-icon">📝</span>
+            <span class="stat-label">Honest posts</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-icon">🇦🇺</span>
+            <span class="stat-label">Australian focused</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-icon">🚫</span>
+            <span class="stat-label">No ads ever</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-icon">💬</span>
+            <span class="stat-label">Real conversations</span>
+        </div>
+    </div>
+
+  <div class="about-cta">
+    <p>Want to know more about the person behind the blog?</p>
+    <button class="btn" onclick="openModal()">📖 Read My Story</button>
+    <a href="/about-me" class="btn btn-outline" style="margin-left:0.75rem">About Me page →</a>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="storyModal" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+
+        <div class="modal-header">
+            <span class="modal-icon">📖</span>
+            <h2>My Full Story</h2>
+            <p>Choose how you'd like to read my autobiography</p>
+        </div>
+
+        <div class="bio-links">
+            <a href="https://autobio-app.onrender.com/" target="_blank"
+               class="bio-link-card" onclick="closeModal()">
+                <span class="bio-link-icon">🌐</span>
+                <div>
+                    <strong>Read Online</strong>
+                    <p>Read my full story in your browser — no download needed</p>
+                </div>
+                <span class="bio-link-arrow">→</span>
+            </a>
+
+            <a href="#" class="bio-link-card" onclick="openPdfModal(); return false;">
+                <span class="bio-link-icon">📄</span>
+                <div>
+                    <strong>View PDF</strong>
+                    <p>Read it right here in the app</p>
+                </div>
+                <span class="bio-link-arrow">↓</span>
+            </a>
+
+            <div class="bio-link-card bio-link-ebook">
+                <span class="bio-link-icon">📱</span>
+                <div>
+                    <strong>eBook</strong>
+                    <p>Coming soon — contact me for details</p>
+                </div>
+                <span class="bio-link-arrow" style="opacity:0.3">⋯</span>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal()">Maybe later</button>
+        </div>
+    </div>
+</div>
+
+<!-- PDF Modal -->
+<div class="modal-overlay" id="pdfModal" onclick="closePdfModalOutside(event)">
+    <div class="modal-box modal-box-pdf">
+        <button class="modal-close" onclick="closePdfModal()">✕</button>
+        <div class="modal-header">
+            <span class="modal-icon">📄</span>
+            <h2>Autobiography PDF</h2>
+        </div>
+        <div style="height:70vh; width:100%;">
+            <iframe id="pdfFrame" src="/static/downloads/autobiography.pdf" width="100%" height="100%" style="border:none;"></iframe>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closePdfModal()">Close PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById('storyModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('storyModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function closeModalOutside(event) {
+        if (event.target === document.getElementById('storyModal')) {
+            closeModal();
+        }
+    }
+
+
+    // PDF Modal logic
+    function openPdfModal() {
+        document.getElementById('pdfModal').classList.add('active');
+    }
+    function closePdfModal() {
+        document.getElementById('pdfModal').classList.remove('active');
+    }
+    function closePdfModalOutside(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            closePdfModal();
+        }
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+</script>
+
+</div>
+{% endblock %}

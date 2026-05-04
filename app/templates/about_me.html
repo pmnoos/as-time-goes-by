@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}About Me — As Time Goes By{% endblock %}
+
+{% block content %}
+
+<!-- Hero with photo -->
+<div class="about-me-hero">
+    <div class="about-me-hero-image">
+        <img src="/static/images/positano.jpg" alt="Relaxing in Positano, Italy">
+    </div>
+    <div class="about-me-hero-text">
+        <p class="about-me-location">📍 Brisbane, Australia</p>
+        <h1>G'day, I'm glad you're here.</h1>
+        <p class="about-me-intro">
+            That's me in Positano, Italy — one of the many places retirement
+            has taken me. I started As Time Goes By because I couldn't find
+            a blog that spoke honestly to people like me. So I decided to
+            write it myself.
+        </p>
+        <a href="#my-story" class="btn">Read my story ↓</a>
+    </div>
+</div>
+
+<div class="about-page">
+
+    <div class="about-me-layout">
+
+        <div class="about-me-main">
+
+            <div class="about-section about-section-warm" id="my-story">
+                <h2>My story</h2>
+                <p>
+                    <!-- ADD YOUR BIOGRAPHY EXCERPT HERE -->
+                    Your biography excerpt goes here. Tell your story in your own
+                    words — where you grew up, your career, your life journey to
+                    this point. This is where your readers will connect with you
+                    as a real person.
+                </p>
+            </div>
+
+            <div class="about-section about-section-teal">
+                <h2>My retirement journey</h2>
+                <p>
+                    <!-- ADD YOUR RETIREMENT STORY HERE -->
+                    What was your transition to retirement like? What surprised you?
+                    What did you wish you'd known? This is where your authenticity
+                    shines — share the real experience, not just the highlights.
+                </p>
+            </div>
+
+            <div class="about-section about-section-purple">
+                <h2>Why I started this blog</h2>
+                <p>
+                    <!-- ADD YOUR MOTIVATION HERE -->
+                    What gap did you notice? What made you decide to start writing?
+                    This is one of the most important sections — readers want to
+                    understand your motivation and know you're genuine.
+                </p>
+            </div>
+
+            <div class="about-section about-section-gold">
+                <h2>What I hope you get from it</h2>
+                <p>
+                    <!-- ADD YOUR HOPES FOR READERS HERE -->
+                    What do you want readers to walk away with? What would make
+                    this blog feel worthwhile to you? What's the one thing you
+                    want every reader to know?
+                </p>
+            </div>
+
+        </div>
+
+        <div class="about-me-sidebar">
+
+            <div class="about-me-card about-me-card-photo">
+                <img src="/static/images/positano.jpg" alt="In Positano, Italy"
+                     style="width:100%;border-radius:8px;margin-bottom:1rem">
+                <p style="font-size:0.82rem;color:var(--muted);text-align:center">
+                    Positano, Italy 🇮🇹
+                </p>
+            </div>
+
+            <div class="about-me-card">
+                <h3>Quick facts</h3>
+                <ul class="about-facts">
+                    <li>📍 Brisbane, Queensland</li>
+                    <li>🎂 Retired <!-- ADD YEAR --></li>
+                    <li>✈️ Loves to travel</li>
+                    <li>✍️ Writing since <!-- ADD YEAR --></li>
+                    <li>☀️ Proudly Australian</li>
+                </ul>
+            </div>
+
+            <div class="about-me-card">
+                <h3>Topics I write about</h3>
+                <div class="tag-list">
+                    <span class="tag">Retirement</span>
+                    <span class="tag">Superannuation</span>
+                    <span class="tag">Aged Pension</span>
+                    <span class="tag">Health</span>
+                    <span class="tag">Housing</span>
+                    <span class="tag">Legal</span>
+                    <span class="tag">Technology</span>
+                    <span class="tag">Community</span>
+                    <span class="tag">Travel</span>
+                    <span class="tag">Life</span>
+                </div>
+            </div>
+
+            <div class="about-me-card about-me-card-disclaimer">
+                <h3>⚠️ A note on advice</h3>
+                <p>
+                    I'm not a financial adviser, lawyer or doctor. Everything I
+                    write comes from personal experience and research. Always
+                    seek qualified professional advice for your specific situation.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="about-cta">
+        <p>Have a question or a topic you'd like me to cover?</p>
+        <a href="/" class="btn">Read the latest posts →</a>
+    </div>
+
+</div>
+{% endblock %}

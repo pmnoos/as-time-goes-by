@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}As Time Goes By — Life, Retirement & Everything In Between{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<div class="landing-hero">
+    <div class="landing-hero-content">
+        <p class="landing-eyebrow">Welcome to</p>
+        <h1>As Time Goes By</h1>
+        <p class="landing-tagline">
+            Honest conversations about life, retirement and everything in between —
+            written by someone living it in Brisbane, Australia.
+        </p>
+        <div class="landing-hero-actions">
+            <a href="/blog" class="btn btn-hero">Explore As Time Goes By</a>
+            <a href="/energy-calculator" class="btn btn-hero-outline">Energy Calculator</a>
+            <a href="/about" class="btn btn-hero-outline">Learn More</a>
+        </div>
+    </div>
+    <div class="landing-hero-cards">
+        <div class="floating-card">💰 Super & Pension</div>
+        <div class="floating-card">🏥 Health & Wellbeing</div>
+        <div class="floating-card">🏠 Housing</div>
+        <div class="floating-card">⚖️ Legal & Estate</div>
+        <div class="floating-card">📱 Technology</div>
+        <div class="floating-card">🤝 Community</div>
+    </div>
+</div>
+
+<!-- Welcome strip -->
+<div class="landing-welcome">
+    <div class="landing-welcome-photo">
+        <img src="/static/images/positano.jpg" alt="As Time Goes By author in Positano">
+    </div>
+    <div class="landing-welcome-text">
+        <h2>G'day — I'm glad you found this place.</h2>
+        <p>
+            I started As Time Goes By because I couldn't find a blog that spoke
+            honestly to people like me. Everything online either tried to sell me
+            something or was written by someone who had never actually lived retirement.
+        </p>
+        <p>
+            So I decided to write it myself. No ads, no products, no condescension —
+            just honest conversations from someone who has been around long enough
+            to know a thing or two.
+        </p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.25rem">
+            <a href="/about-me" class="btn">My Story →</a>
+            <a href="/about" class="btn btn-outline">About This Blog →</a>
+        </div>
+    </div>
+</div>
+
+<!-- Topics section -->
+<div class="landing-section">
+    <h2 class="landing-section-title">What we talk about</h2>
+    <p class="landing-section-sub">Practical, honest information across the topics that matter most in retirement</p>
+    <div class="landing-topics">
+        <a href="/blog/category/finance-super" class="landing-topic-card lt-purple" style="text-decoration:none;color:inherit">
+            <span class="lt-icon">💰</span>
+            <h3>Finance & Super</h3>
+            <p>Superannuation, aged pension, Centrelink and making your money last.</p>
+        </a>
+        <a href="/blog/category/health-wellbeing" class="landing-topic-card lt-teal" style="text-decoration:none;color:inherit">
+            <span class="lt-icon">🏥</span>
+            <h3>Health & Wellbeing</h3>
+            <p>Medicare, private health, aged care and staying active and sharp.</p>
+        </a>
+        <a href="/blog/category/housing" class="landing-topic-card lt-coral" style="text-decoration:none;color:inherit">
+            <span class="lt-icon">🏠</span>
+            <h3>Housing</h3>
+            <p>Downsizing, retirement villages, reverse mortgages and the family home.</p>
+        </a>
+        <a href="/blog/category/legal-estate" class="landing-topic-card lt-pink" style="text-decoration:none;color:inherit">
+            <span class="lt-icon">⚖️</span>
+            <h3>Legal & Estate</h3>
+            <p>Wills, power of attorney and the conversations families need to have.</p>
+        </a>
+        <a href="/blog/category/technology" class="landing-topic-card lt-amber" style="text-decoration:none;color:inherit">
+            <span class="lt-icon">📱</span>
+            <h3>Technology</h3>
+            <p>Staying connected, avoiding scams and navigating the digital world safely.</p>
+        </a>
+        <a href="/blog/category/community-life" class="landing-topic-card lt-blue" style="text-decoration:none;color:inherit">
+            <span class="lt-icon">🤝</span>
+            <h3>Community & Life</h3>
+            <p>Connection, travel, hobbies and finding purpose in retirement.</p>
+        </a>
+    </div>
+</div>
+
+<!-- Promise section -->
+<div class="landing-promise">
+    <h2>Our promise to you</h2>
+    <div class="promise-grid">
+        <div class="promise-item">
+            <span class="promise-icon">🚫</span>
+            <h3>No Ads</h3>
+            <p>Never. Not now, not ever.</p>
+        </div>
+        <div class="promise-item">
+            <span class="promise-icon">💬</span>
+            <h3>Plain English</h3>
+            <p>No jargon, no condescension.</p>
+        </div>
+        <div class="promise-item">
+            <span class="promise-icon">🤝</span>
+            <h3>No Hidden Agenda</h3>
+            <p>Just honest information.</p>
+        </div>
+        <div class="promise-item">
+            <span class="promise-icon">🇦🇺</span>
+            <h3>Australian Focused</h3>
+            <p>Written for the Australian experience.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="landing-cta">
+    <h2>Ready to start reading?</h2>
+    <p>Join the conversation — honest, practical and written from experience.</p>
+    <a href="/blog" class="btn btn-hero">Explore As Time Goes By</a>
+</div>
+
+{% endblock %}

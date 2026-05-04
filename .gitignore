@@ -1,0 +1,28 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local environment and secrets
+.env
+blog.db
+
+# OS/IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Alembic migration cache
+alembic/versions/*.pyc
+
+# Jupyter and test cache
+.ipynb_checkpoints/
+.mypy_cache/
+.pytest_cache/

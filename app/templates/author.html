@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ author.username }} — My Blog{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Posts by {{ author.username }}</h1>
+    <p class="post-excerpt">Member since {{ author.created_at.strftime('%B %Y') }}</p>
+</div>
+
+{% if posts %}
+<div class="posts-grid">
+    {% for post in posts %}
+    <article class="post-card color-{{ loop.index0 % 6 }}">
+        {% if post.cover_image %}
+        <img src="{{ post.cover_image }}" alt="{{ post.title }}" class="post-cover">
+        {% endif %}
+        <div class="post-card-body">
+            <div class="tag-list">
+                {% for tag in post.tags %}
+                <span class="tag">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+            <h2><a href="/posts/{{ post.slug }}">{{ post.title }}</a></h2>
+            <p class="post-excerpt">{% set excerpt = strip_html(post.body) %}{{ excerpt[:150] }}{% if excerpt|length > 150 %}...{% endif %}</p>
+            <div class="post-meta">
+                <span>{{ post.created_at.strftime('%b %d, %Y') }}</span>
+                <a href="/posts/{{ post.slug }}" class="read-more">Read more →</a>
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>{{ author.username }} hasn't written any posts yet.</p>
+</div>
+{% endif %}
+{% endblock %}
