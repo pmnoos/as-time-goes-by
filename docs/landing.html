@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>As Time Goes By — Life, Retirement & Everything In Between</title>
+    <link rel="stylesheet" href="../app/static/css/style.css">
+    <script>
+        function getTheme() {
+            try {
+                return localStorage.getItem('theme') || 'light';
+            } catch(e) {
+                return 'light';
+            }
+        }
+        document.documentElement.setAttribute('data-theme', getTheme());
+    </script>
+</head>
+<body>
+ <nav class="navbar">
+    <a href="#" class="nav-brand">
+        <span class="nav-brand-main">As Time Goes By</span>
+        <span class="nav-brand-sub">Life · Retirement · Everything In Between</span>
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()" id="nav-toggle">☰</button>
+    <div class="nav-links" id="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Blog</a>
+        <a href="#">Search</a>
+        <a href="#">Mortgage</a>
+        <a href="#">About</a>
+        <a href="#">About Me</a>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Dark</button>
+    </div>
+</nav>
+<script>
+    function toggleNav() {
+        const links = document.getElementById('nav-links');
+        links.classList.toggle('nav-open');
+    }
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('nav-links').classList.remove('nav-open');
+        });
+    });
+</script>
+    <main class="container">
+<!-- Hero -->
+<div class="landing-hero">
+    <div class="landing-hero-content">
+        <p class="landing-eyebrow">Welcome to</p>
+        <h1>As Time Goes By</h1>
+        <p class="landing-tagline">
+            Honest conversations about life, retirement and everything in between —
+            written by someone living it in Brisbane, Australia.
+        </p>
+        <div class="landing-hero-actions">
+            <a href="#" class="btn btn-hero">Explore As Time Goes By</a>
+            <a href="#" class="btn btn-hero-outline">Energy Calculator</a>
+            <a href="#" class="btn btn-hero-outline">Learn More</a>
+        </div>
+    </div>
+    <div class="landing-hero-cards">
+        <div class="floating-card">💰 Super & Pension</div>
+        <div class="floating-card">🏥 Health & Wellbeing</div>
+        <div class="floating-card">🏠 Housing</div>
+        <div class="floating-card">⚖️ Legal & Estate</div>
+        <div class="floating-card">📱 Technology</div>
+        <div class="floating-card">🤝 Community</div>
+    </div>
+</div>
+<!-- Welcome strip -->
+<div class="landing-welcome">
+    <div class="landing-welcome-photo">
+        <img src="../app/static/images/positano.jpg" alt="As Time Goes By author in Positano">
+    </div>
+    <div class="landing-welcome-text">
+        <h2>G'day — I'm glad you found this place.</h2>
+        <p>
+            I started As Time Goes By because I couldn't find a blog that spoke
+            honestly to people like me. Everything online either tried to sell me
+            something or was written by someone who had never actually lived retirement.
+        </p>
+        <p>
+            So I decided to write it myself. No ads, no products, no condescension —
+            just honest conversations from someone who has been around long enough
+            to know a thing or two.
+        </p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.25rem">
+            <a href="#" class="btn">My Story →</a>
+            <a href="#" class="btn btn-outline">About This Blog →</a>
+        </div>
+    </div>
+</div>
+<!-- Topics section -->
+<div class="landing-section">
+    <h2 class="landing-section-title">What we talk about</h2>
+    <p class="landing-section-sub">Practical, honest information across the topics that matter most in retirement</p>
+    <div class="landing-topics">
+        <div class="landing-topic-card lt-purple"><span class="lt-icon">💰</span><h3>Finance & Super</h3><p>Superannuation, aged pension, Centrelink and making your money last.</p></div>
+        <div class="landing-topic-card lt-teal"><span class="lt-icon">🏥</span><h3>Health & Wellbeing</h3><p>Medicare, private health, aged care and staying active and sharp.</p></div>
+        <div class="landing-topic-card lt-coral"><span class="lt-icon">🏠</span><h3>Housing</h3><p>Downsizing, retirement villages, reverse mortgages and the family home.</p></div>
+        <div class="landing-topic-card lt-pink"><span class="lt-icon">⚖️</span><h3>Legal & Estate</h3><p>Wills, power of attorney and the conversations families need to have.</p></div>
+        <div class="landing-topic-card lt-amber"><span class="lt-icon">📱</span><h3>Technology</h3><p>Staying connected, avoiding scams and navigating the digital world safely.</p></div>
+        <div class="landing-topic-card lt-blue"><span class="lt-icon">🤝</span><h3>Community & Life</h3><p>Connection, travel, hobbies and finding purpose in retirement.</p></div>
+    </div>
+</div>
+<!-- Promise section -->
+<div class="landing-promise">
+    <h2>Our promise to you</h2>
+    <div class="promise-grid">
+        <div class="promise-item">
+            <span class="promise-icon">🚫</span>
+            <h3>No Ads</h3>
+            <p>Never. Not now, not ever.</p>
+        </div>
+        <div class="promise-item">
+            <span class="promise-icon">💬</span>
+            <h3>Plain English</h3>
+            <p>No jargon, no condescension.</p>
+        </div>
+        <div class="promise-item">
+            <span class="promise-icon">🤝</span>
+            <h3>No Hidden Agenda</h3>
+            <p>Just honest information.</p>
+        </div>
+        <div class="promise-item">
+            <span class="promise-icon">🇦🇺</span>
+            <h3>Australian Focused</h3>
+            <p>Written for the Australian experience.</p>
+        </div>
+    </div>
+</div>
+<!-- CTA -->
+<div class="landing-cta">
+    <h2>Ready to start reading?</h2>
+    <p>Join the conversation — honest, practical and written from experience.</p>
+    <a href="#" class="btn btn-hero">Explore As Time Goes By</a>
+</div>
+    </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <span class="footer-brand">As Time Goes By</span>
+                <span class="footer-copy">&copy; 2026 All rights reserved.</span>
+                <span class="footer-tagline">Honest conversations about life, retirement and everything in between.</span>
+            </div>
+        <div class="footer-links">
+    <a href="#">Blog</a>
+    <a href="#">Search</a>
+    <a href="#">Mortgage</a>
+    <a href="#">About</a>
+    <a href="#">About Me</a>
+</div>
+        </div>
+        <div class="footer-bottom">
+            <span>Built with ❤️ in Brisbane, Australia</span>
+        </div>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            try {
+                localStorage.setItem('theme', next);
+            } catch(e) {}
+            updateBtn(next);
+        }
+        function updateBtn(theme) {
+            const btn = document.getElementById('theme-btn');
+            btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+        }
+        updateBtn(getTheme());
+    </script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+/* Copy of main style for GitHub Pages static preview */
+
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --purple:  #8B5CF6;
+    --teal:    #0D9488;
+    --coral:   #E85D3D;
+    --pink:    #DB2777;
+    --amber:   #D97706;
+    --blue:    #2563EB;
+    --warm:    #92400E;
+    --gold:    #B45309;
+    --bg:      #faf9f6;
+    --surface: #ffffff;
+    --text:    #2c2c2a;
+    --muted:   #6b7280;
+    --radius:  12px;
+}
+body {
+    font-family: system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth theme transitions for key surfaces */
+.navbar, .post-card, .post-full, .comment, .form-group input, .form-group textarea, .footer, .tag {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Navbar ── */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid #e2e0d8;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--purple);
+    letter-spacing: -0.5px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+.nav-links a {
+    color: var(--muted);
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* ── Container ── */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+}
+
+/* ── Page header ── */
+.page-header { margin-bottom: 2rem; }
+.page-header h1 { font-size: 2rem; font-weight: 700; }
+
+/* ── Posts grid ── */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* ── Post card ── */
+.post-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border-top: 5px solid var(--purple);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+/* Colorful top borders cycling through accent colors */
+.post-card.color-0 { border-top-color: var(--purple); }
+.post-card.color-1 { border-top-color: var(--teal);   }
+.post-card.color-2 { border-top-color: var(--coral);  }
+.post-card.color-3 { border-top-color: var(--pink);   }
+.post-card.color-4 { border-top-color: var(--amber);  }
+.post-card.color-5 { border-top-color: var(--blue);   }
+
+.post-cover {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.post-card-body { padding: 1.25rem; }
+
+.post-card-body h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    line-height: 1.4;
+}
+
+.post-card-body h2 a:hover { color: var(--purple); }
+
+.post-excerpt {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+}
+
+.read-more {
+    color: var(--purple);
+    font-weight: 500;
+}
+.read-more:hover { text-decoration: underline; }
+
+/* ── Tags ── */
+.tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+
+.tag {
+    background: #eeedfe;
+    color: #534ab7;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+}
+
+/* ── Full post ── */
+.post-full {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.post-cover-full {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+}
+
+.post-full-header {
+    padding: 2rem 2.5rem 1rem;
+    border-bottom: 1px solid #e2e0d8;
+}
+
+.post-full-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+    line-height: 1.3;
+}
+
+.post-body {
+    padding: 2rem 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+}
+
+.post-actions {
+    padding: 1.5rem 2.5rem;
+    border-top: 1px solid #e2e0d8;
+    display: flex;
+    gap: 1rem;
+}
+
+/* ── Buttons ── */
+.btn {
+    display: inline-block;
+    background: var(--purple);
+    color: #fff;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.btn:hover { opacity: 0.88; }
+
+.btn-outline {
+    background: transparent;
+    color: var(--purple);
+    border: 1.5px solid var(--purple);
+}
+.btn-outline:hover { background: #eeedfe; opacity: 1; }
+.btn-danger {
+    background: transparent;
+    color: #a32d2d;
+    border: 1.5px solid #a32d2d;
+}
+
+.btn-danger:hover {
+    background: #fcebeb;
+    opacity: 1;
+}
+/* ── Create form ── */
+.form-page { max-width: 680px; margin: 0 auto; }
+.form-page h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; }
+
+.form-group { margin-bottom: 1.25rem; }
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+.hint { color: var(--muted); font-weight: 400; }
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid #d3d1c7;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--purple);
+}
+
+.form-group textarea { resize: vertical; }
+
+/* ── Empty state ── */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+}
+.empty-state p { margin-bottom: 1rem; font-size: 1.1rem; }
+
+/* ── Footer ── */
+.footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #e2e0d8;
+    margin-top: 3rem;
+}
+
+/* ── Error message ── */
+.error {
+    background: #fcebeb;
+    color: #a32d2d;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+/* ── Pagination ── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+/* ── Mortgage pagination ── */
+.mortgage-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding: 0 0.5rem;
+}
+
+.mortgage-pagination .btn-outline:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ── Quill editor ── */
+#quill-editor {
+    min-height: 280px;
+    background: var(--surface);
+    border: 1.5px solid #d3d1c7;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+#quill-editor:focus-within {
+    border-color: var(--purple);
+}
+
+.ql-toolbar {
+    border: 1.5px solid #d3d1c7 !important;
+    border-radius: 8px 8px 0 0 !important;
+    background: var(--bg) !important;
+    font-family: inherit !important;
+}
+
+.ql-toolbar:focus-within {
+    border-color: var(--purple) !important;
+}
+
+.ql-container {
+    font-family: inherit !important;
+    font-size: 0.95rem !important;
+}
+
