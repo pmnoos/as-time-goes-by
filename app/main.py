@@ -11,6 +11,7 @@ from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 import os
+from .templates_config import templates
 
 
 load_dotenv()

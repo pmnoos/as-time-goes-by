@@ -46,10 +46,11 @@
     </form>
 </div>
 
-<!-- Quill -->
+<!-- Quill Editor (stable features only) -->
 <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
     const quill = new Quill('#quill-editor', {
         theme: 'snow',
         placeholder: 'Write your post here...',
@@ -59,7 +60,9 @@
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ list: 'ordered' }, { list: 'bullet' }],
                 ['blockquote', 'code-block'],
-                ['link'],
+                ['link', 'image', 'video'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
                 ['clean']
             ]
         }
@@ -68,5 +71,6 @@
     document.getElementById('post-form').addEventListener('submit', function(e) {
         document.getElementById('body').value = quill.root.innerHTML;
     });
+});
 </script>
 {% endblock %}
