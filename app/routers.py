@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, Request, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
@@ -7,55 +6,20 @@ from . import models, schemas
 from .database import get_db
 from .auth.dependencies import get_current_user, require_user
 from .templates_config import templates
+from .storage import upload_image, delete_image
 from collections import namedtuple
-import shutil
 import re
 from pathlib import Path
 from .schemas import CATEGORIES
+from datetime import datetime
+import logging
 
 router = APIRouter()
 
-# Energy Calculator Page
-@router.get("/energy-calculator", response_class=HTMLResponse)
-def energy_calculator_page(request: Request, current_user=None):
-    return templates.TemplateResponse(request, "energy-calculator.html", {"request": request, "current_user": current_user})
 
-# ...existing code...
-
-@router.get("/blog/category/{category}", response_class=HTMLResponse)
-def blog_category_page(
-    category: str,
-    request: Request,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-    page: int = 1,
-):
-    # Validate category
-    valid_categories = [c[0] for c in CATEGORIES]
-    print(f"[DEBUG] Incoming category: '{category}'")
-    print(f"[DEBUG] Valid categories: {valid_categories}")
-    if category not in valid_categories:
-        print("[DEBUG] Category not found! Returning 404.")
-        raise HTTPException(status_code=404, detail="Category not found")
-    per_page = 6
-    total = db.query(models.Post).filter(models.Post.category == category).count()
-    posts = (
-        db.query(models.Post)
-        .filter(models.Post.category == category)
-        .order_by(models.Post.created_at.desc())
-        .offset((page - 1) * per_page)
-        .limit(per_page)
-        .all()
-    )
-    total_pages = (total + per_page - 1) // per_page
-    return templates.TemplateResponse(request, "home.html", {
-        "posts": posts,
-        "current_user": current_user,
-        "page": page,
-        "total_pages": total_pages,
-        "category": category,
-    })
-
+# ─────────────────────────────────────────────
+# HELPERS
+# ─────────────────────────────────────────────
 
 def slugify(text: str) -> str:
     text = text.lower().strip()
@@ -76,7 +40,10 @@ def get_or_create_tags(db: Session, tag_names: list[str]) -> list:
     return tags
 
 
-# HTML pages
+# ─────────────────────────────────────────────
+# LANDING & BLOG
+# ─────────────────────────────────────────────
+
 @router.get("/", response_class=HTMLResponse)
 def landing_page(request: Request, current_user=Depends(get_current_user)):
     return templates.TemplateResponse(request, "landing.html", {
@@ -107,10 +74,25 @@ def home_page(
         "page": page,
         "total_pages": total_pages,
     })
+
+
+@router.get("/blog/category/{category}", response_class=HTMLResponse)
+def blog_category_page(
+    category: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+    page: int = 1,
+):
+    valid_categories = [c[0] for c in CATEGORIES]
+    if category not in valid_categories:
+        raise HTTPException(status_code=404, detail="Category not found")
+
     per_page = 6
-    total = db.query(models.Post).count()
+    total = db.query(models.Post).filter(models.Post.category == category).count()
     posts = (
         db.query(models.Post)
+        .filter(models.Post.category == category)
         .order_by(models.Post.created_at.desc())
         .offset((page - 1) * per_page)
         .limit(per_page)
@@ -118,81 +100,17 @@ def home_page(
     )
     total_pages = (total + per_page - 1) // per_page
     return templates.TemplateResponse(request, "home.html", {
-        "request": request,
         "posts": posts,
         "current_user": current_user,
         "page": page,
         "total_pages": total_pages,
+        "category": category,
     })
 
-@router.get("/posts/new", response_class=HTMLResponse)
-def new_post_page(request: Request, current_user=Depends(require_user)):
-    return templates.TemplateResponse(request, "create.html", {"request": request, "current_user": current_user})
 
-
-@router.get("/posts/{slug}", response_class=HTMLResponse)
-def post_page(slug: str, request: Request, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
-    post = db.query(models.Post).filter(models.Post.slug == slug).first()
-    if not post:
-        raise HTTPException(status_code=404, detail="Post not found")
-    comments = (
-        db.query(models.Comment)
-        .filter(models.Comment.post_id == post.id)
-        .order_by(models.Comment.created_at.asc())
-        .all()
-    )
-    return templates.TemplateResponse(request, "post.html", {
-        "request": request,
-        "post": post,
-        "current_user": current_user,
-        "comments": comments,
-    })
-
-@router.post("/posts/new", response_class=HTMLResponse)
-def create_post_page(
-    request: Request,
-    title: str = Form(...),
-    body: str = Form(...),
-    category: str = Form(...),
-    tags: str = Form(""),
-    cover_image: UploadFile = File(None),
-    cover_caption: str = Form(default=""),
-    db: Session = Depends(get_db),
-    current_user=Depends(require_user),
-):
-    slug = slugify(title)
-    existing = db.query(models.Post).filter(models.Post.slug == slug).first()
-    if existing:
-        return templates.TemplateResponse(request, "create.html", {
-            "request": request,
-            "current_user": current_user,
-            "error": "A post with that title already exists"
-        })
-
-    image_path = None
-    if cover_image and cover_image.filename:
-        upload_dir = Path("app/static/uploads")
-        upload_dir.mkdir(exist_ok=True)
-        file_path = upload_dir / cover_image.filename
-        with file_path.open("wb") as f:
-            shutil.copyfileobj(cover_image.file, f)
-        image_path = f"/static/uploads/{cover_image.filename}"
-
-    tag_names = [t.strip() for t in tags.split(",") if t.strip()]
-    post_tags_list = get_or_create_tags(db, tag_names)
-    post = models.Post(
-        title=title,
-        slug=slug,
-        body=body,
-        category=category,
-        cover_image=image_path,
-        cover_caption=cover_caption.strip() or None,
-        author_id=current_user.id,
-        tags=post_tags_list,
-    )
-    db.add(post)
-    db.commit()
-    return RedirectResponse(url="/", status_code=303)
+# ─────────────────────────────────────────────
+# SEARCH
+# ─────────────────────────────────────────────
 
 @router.get("/search", response_class=HTMLResponse)
 def search(
@@ -218,28 +136,212 @@ def search(
         "q": q,
     })
 
-@router.get("/users/{username}", response_class=HTMLResponse)
-def author_page(
-    username: str,
+
+# ─────────────────────────────────────────────
+# POSTS — CREATE
+# ─────────────────────────────────────────────
+
+@router.get("/posts/new", response_class=HTMLResponse)
+def new_post_page(request: Request, current_user=Depends(require_user)):
+    return templates.TemplateResponse(request, "create.html", {
+        "current_user": current_user,
+    })
+
+
+@router.post("/posts/new", response_class=HTMLResponse)
+def create_post_page(
+    request: Request,
+    title: str = Form(...),
+    body: str = Form(...),
+    category: str = Form(...),
+    tags: str = Form(""),
+    cover_image: UploadFile = File(None),
+    cover_caption: str = Form(default=""),
+    db: Session = Depends(get_db),
+    current_user=Depends(require_user),
+):
+    slug = slugify(title)
+    existing = db.query(models.Post).filter(models.Post.slug == slug).first()
+    if existing:
+        return templates.TemplateResponse(request, "create.html", {
+            "current_user": current_user,
+            "error": "A post with that title already exists",
+        })
+
+    # Upload cover image to Cloudflare R2
+    image_path = None
+    if cover_image and cover_image.filename:
+        image_path = upload_image(cover_image.file, cover_image.filename)
+        if image_path is None:
+            return templates.TemplateResponse(request, "create.html", {
+                "current_user": current_user,
+                "error": "Image upload failed, please try again",
+            })
+
+    tag_names = [t.strip() for t in tags.split(",") if t.strip()]
+    post_tags_list = get_or_create_tags(db, tag_names)
+
+    post = models.Post(
+        title=title,
+        slug=slug,
+        body=body,
+        category=category,
+        cover_image=image_path,
+        cover_caption=cover_caption.strip() or None,
+        author_id=current_user.id,
+        tags=post_tags_list,
+    )
+    db.add(post)
+    db.commit()
+    # FIX: redirect to the new post, not the landing page
+    return RedirectResponse(url=f"/posts/{slug}", status_code=303)
+
+
+# ─────────────────────────────────────────────
+# POSTS — READ
+# ─────────────────────────────────────────────
+
+@router.get("/posts/{slug}", response_class=HTMLResponse)
+def post_page(
+    slug: str,
     request: Request,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    author = db.query(models.User).filter(models.User.username == username).first()
-    if not author:
-        raise HTTPException(status_code=404, detail="User not found")
-    posts = (
-        db.query(models.Post)
-        .filter(models.Post.author_id == author.id)
-        .order_by(models.Post.created_at.desc())
+    post = db.query(models.Post).filter(models.Post.slug == slug).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    comments = (
+        db.query(models.Comment)
+        .filter(models.Comment.post_id == post.id)
+        .order_by(models.Comment.created_at.asc())
         .all()
     )
-    return templates.TemplateResponse(request, "author.html", {
-        "author": author,
-        "posts": posts,
+    return templates.TemplateResponse(request, "post.html", {
+        "post": post,
+        "current_user": current_user,
+        "comments": comments,
+    })
+
+
+# ─────────────────────────────────────────────
+# POSTS — EDIT
+# ─────────────────────────────────────────────
+
+@router.get("/posts/{slug}/edit", response_class=HTMLResponse)
+def edit_post_page(
+    slug: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user=Depends(require_user),
+):
+    post = db.query(models.Post).filter(models.Post.slug == slug).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    if post.author_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your post")
+    return templates.TemplateResponse(request, "edit.html", {
+        "post": post,
         "current_user": current_user,
     })
 
+
+@router.post("/posts/{slug}/edit", response_class=HTMLResponse)
+def edit_post(
+    slug: str,
+    request: Request,
+    title: str = Form(...),
+    body: str = Form(...),
+    category: str = Form(...),
+    tags: str = Form(""),
+    cover_image: UploadFile = File(default=None),
+    cover_caption: str = Form(default=""),
+    db: Session = Depends(get_db),
+    current_user=Depends(require_user),
+):
+    post = db.query(models.Post).filter(models.Post.slug == slug).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    if post.author_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your post")
+
+    new_slug = slugify(title)
+    # Check for duplicate slug (exclude current post)
+    existing = db.query(models.Post).filter(models.Post.slug == new_slug, models.Post.id != post.id).first()
+    if existing:
+        # Render edit page with error
+        return templates.TemplateResponse(request, "edit.html", {
+            "post": post,
+            "current_user": current_user,
+            "error": "A post with that title already exists. Please choose a different title.",
+            "CATEGORIES": schemas.CATEGORIES,
+        })
+
+    post.title = title
+    post.slug = new_slug
+    post.body = body
+    post.category = category
+    post.cover_caption = cover_caption.strip() or None
+
+    # Upload new cover image to Cloudflare R2 if provided
+    if cover_image and getattr(cover_image, "filename", None) and getattr(cover_image, "file", None) and getattr(cover_image, "size", 0) > 0:
+        # Delete the old image from R2 first
+        if post.cover_image:
+            delete_image(post.cover_image)
+        try:
+            new_url = upload_image(cover_image.file, cover_image.filename)
+        except Exception as e:
+            logging.error(f"Image upload failed: {e}")
+            return templates.TemplateResponse(request, "edit.html", {
+                "post": post,
+                "current_user": current_user,
+                "error": "Image upload failed. Please try again or use a different image.",
+                "CATEGORIES": schemas.CATEGORIES,
+            })
+        if not new_url:
+            return templates.TemplateResponse(request, "edit.html", {
+                "post": post,
+                "current_user": current_user,
+                "error": "Image upload failed. Please try again or use a different image.",
+                "CATEGORIES": schemas.CATEGORIES,
+            })
+        post.cover_image = new_url
+
+    tag_names = [t.strip() for t in tags.split(",") if t.strip()]
+    post.tags = get_or_create_tags(db, tag_names)
+
+    db.commit()
+    return RedirectResponse(url=f"/posts/{post.slug}", status_code=303)
+
+
+# ─────────────────────────────────────────────
+# POSTS — DELETE
+# ─────────────────────────────────────────────
+
+@router.post("/posts/{slug}/delete", response_class=HTMLResponse)
+def delete_post_page(
+    slug: str,
+    db: Session = Depends(get_db),
+    current_user=Depends(require_user),
+):
+    post = db.query(models.Post).filter(models.Post.slug == slug).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    if post.author_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your post")
+
+    # Clean up the image from R2 when deleting a post
+    if post.cover_image:
+        delete_image(post.cover_image)
+
+    db.delete(post)
+    db.commit()
+    return RedirectResponse(url="/blog", status_code=303)
+
+
+# ─────────────────────────────────────────────
+# COMMENTS
+# ─────────────────────────────────────────────
 
 @router.post("/posts/{slug}/comments", response_class=HTMLResponse)
 def add_comment(
@@ -279,77 +381,64 @@ def delete_comment(
     db.commit()
     return RedirectResponse(url=f"/posts/{slug}", status_code=303)
 
-@router.get("/posts/{slug}/edit", response_class=HTMLResponse)
-def edit_post_page(slug: str, request: Request, db: Session = Depends(get_db), current_user=Depends(require_user)):
-    post = db.query(models.Post).filter(models.Post.slug == slug).first()
-    if not post:
-        raise HTTPException(status_code=404, detail="Post not found")
-    if post.author_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not your post")
-    return templates.TemplateResponse(request, "edit.html", {
-        "post": post,
+
+# ─────────────────────────────────────────────
+# USERS
+# ─────────────────────────────────────────────
+
+@router.get("/users/{username}", response_class=HTMLResponse)
+def author_page(
+    username: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    author = db.query(models.User).filter(models.User.username == username).first()
+    if not author:
+        raise HTTPException(status_code=404, detail="User not found")
+    posts = (
+        db.query(models.Post)
+        .filter(models.Post.author_id == author.id)
+        .order_by(models.Post.created_at.desc())
+        .all()
+    )
+    return templates.TemplateResponse(request, "author.html", {
+        "author": author,
+        "posts": posts,
         "current_user": current_user,
     })
 
 
-@router.post("/posts/{slug}/edit", response_class=HTMLResponse)
-def edit_post(
-    slug: str,
-    request: Request,
-    title: str = Form(...),
-    body: str = Form(...),
-    category: str = Form(...),
-    tags: str = Form(""),
-    cover_image: UploadFile = File(default=None),
-    cover_caption: str = Form(default=""),
-    db: Session = Depends(get_db),
-    current_user=Depends(require_user),
-):
-    post = db.query(models.Post).filter(models.Post.slug == slug).first()
-    if not post:
-        raise HTTPException(status_code=404, detail="Post not found")
-    if post.author_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not your post")
-
-    post.title = title
-    post.slug = slugify(title)
-    post.body = body
-    post.category = category
-
-    if cover_image and cover_image.filename and cover_image.size > 0:
-        upload_dir = Path("app/static/uploads")
-        upload_dir.mkdir(exist_ok=True)
-        file_path = upload_dir / cover_image.filename
-        with file_path.open("wb") as f:
-            shutil.copyfileobj(cover_image.file, f)
-        post.cover_image = f"/static/uploads/{cover_image.filename}"
-
-    tag_names = [t.strip() for t in tags.split(",") if t.strip()]
-    post.tags = get_or_create_tags(db, tag_names)
-    post.cover_caption = cover_caption.strip() or None
-    db.commit()
-    return RedirectResponse(url=f"/posts/{post.slug}", status_code=303)
-
-@router.post("/posts/{slug}/delete", response_class=HTMLResponse)
-def delete_post_page(
-    slug: str,
-    db: Session = Depends(get_db),
-    current_user=Depends(require_user),
-):
-    post = db.query(models.Post).filter(models.Post.slug == slug).first()
-    if not post:
-        raise HTTPException(status_code=404, detail="Post not found")
-    if post.author_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not your post")
-    db.delete(post)
-    db.commit()
-    return RedirectResponse(url="/", status_code=303)
+# ─────────────────────────────────────────────
+# MORTGAGE CALCULATOR
+# ─────────────────────────────────────────────
 
 @router.get("/mortgage", response_class=HTMLResponse)
-def mortgage_page(request: Request, current_user=Depends(get_current_user)):
+def mortgage_form(request: Request, current_user=Depends(get_current_user)):
     return templates.TemplateResponse(request, "mortgage.html", {
-        "request": request,
         "current_user": current_user,
+        "schedule": [],
+        "monthly_payment": 0,
+        "total_interest_standard": 0,
+        "total_interest_accelerated": 0,
+        "total_cost": 0,
+        "total_cost_accelerated": 0,
+        "balance_at_check_standard": 0,
+        "balance_at_check_accelerated": 0,
+        "interest_saved": 0,
+        "months_saved": 0,
+        "years_saved": 0,
+        "remaining_months_saved": 0,
+        "actual_months": 0,
+        "principal": None,
+        "annual_rate": None,
+        "years": None,
+        "check_year": None,
+        "extra_repayment": 0,
+        "page": 1,
+        "total_pages": 1,
+        "per_page": 24,
+        "now": datetime.now(),
     })
 
 
@@ -371,10 +460,16 @@ def mortgage_calculate(
     if monthly_rate == 0:
         monthly_payment = principal / total_payments
     else:
-        monthly_payment = principal * (monthly_rate * (1 + monthly_rate) ** total_payments) / \
-                          ((1 + monthly_rate) ** total_payments - 1)
+        monthly_payment = (
+            principal
+            * (monthly_rate * (1 + monthly_rate) ** total_payments)
+            / ((1 + monthly_rate) ** total_payments - 1)
+        )
 
-    Row = namedtuple('Row', ['month', 'year', 'interest', 'principal', 'balance', 'extra', 'accelerated'])
+    Row = namedtuple(
+        "Row",
+        ["month", "year", "interest", "principal", "balance", "extra", "accelerated"],
+    )
 
     # Standard schedule
     standard_schedule = []
@@ -388,17 +483,19 @@ def mortgage_calculate(
         total_interest_standard += interest
         if balance < 0:
             balance = 0
-        standard_schedule.append(Row(
-            month=month,
-            year=(month - 1) // 12 + 1,
-            interest=round(interest, 2),
-            principal=round(principal_paid, 2),
-            balance=round(balance, 2),
-            extra=0,
-            accelerated=False,
-        ))
+        standard_schedule.append(
+            Row(
+                month=month,
+                year=(month - 1) // 12 + 1,
+                interest=round(interest, 2),
+                principal=round(principal_paid, 2),
+                balance=round(balance, 2),
+                extra=0,
+                accelerated=False,
+            )
+        )
 
-    # Accelerated schedule with extra repayments
+    # Accelerated schedule
     accelerated_schedule = []
     balance = principal
     total_interest_accelerated = 0
@@ -411,39 +508,46 @@ def mortgage_calculate(
         principal_paid = monthly_payment - interest
         extra = min(extra_repayment, balance - principal_paid)
         extra = max(extra, 0)
-        balance -= (principal_paid + extra)
+        balance -= principal_paid + extra
         total_interest_accelerated += interest
         actual_months = month
         if balance < 0:
             balance = 0
-        accelerated_schedule.append(Row(
-            month=month,
-            year=(month - 1) // 12 + 1,
-            interest=round(interest, 2),
-            principal=round(principal_paid, 2),
-            balance=round(balance, 2),
-            extra=round(extra, 2),
-            accelerated=True,
-        ))
+        accelerated_schedule.append(
+            Row(
+                month=month,
+                year=(month - 1) // 12 + 1,
+                interest=round(interest, 2),
+                principal=round(principal_paid, 2),
+                balance=round(balance, 2),
+                extra=round(extra, 2),
+                accelerated=True,
+            )
+        )
 
-    balance_at_check_standard = standard_schedule[check_payment - 1].balance if check_payment <= total_payments else 0
-    balance_at_check_accelerated = accelerated_schedule[check_payment - 1].balance if check_payment <= len(accelerated_schedule) else 0
+    balance_at_check_standard = (
+        standard_schedule[check_payment - 1].balance
+        if check_payment <= total_payments
+        else 0
+    )
+    balance_at_check_accelerated = (
+        accelerated_schedule[check_payment - 1].balance
+        if check_payment <= len(accelerated_schedule)
+        else 0
+    )
 
     months_saved = total_payments - actual_months
     years_saved = months_saved // 12
     remaining_months_saved = months_saved % 12
     interest_saved = total_interest_standard - total_interest_accelerated
 
-    # Pagination on accelerated schedule if extra repayments, else standard
     schedule = accelerated_schedule if extra_repayment > 0 else standard_schedule
-
     per_page = 24
     total_pages = (len(schedule) + per_page - 1) // per_page
     page = max(1, min(page, total_pages))
     paginated = schedule[(page - 1) * per_page: page * per_page]
 
     return templates.TemplateResponse(request, "mortgage.html", {
-        "request": request,
         "current_user": current_user,
         "schedule": paginated,
         "monthly_payment": round(monthly_payment, 2),
@@ -467,11 +571,15 @@ def mortgage_calculate(
         "total_pages": total_pages,
         "per_page": per_page,
     })
-    
+
+
+# ─────────────────────────────────────────────
+# STATIC PAGES
+# ─────────────────────────────────────────────
+
 @router.get("/about", response_class=HTMLResponse)
 def about_page(request: Request, current_user=Depends(get_current_user)):
     return templates.TemplateResponse(request, "about.html", {
-        "request": request,
         "current_user": current_user,
     })
 
@@ -481,5 +589,3 @@ def about_me_page(request: Request, current_user=Depends(get_current_user)):
     return templates.TemplateResponse(request, "about_me.html", {
         "current_user": current_user,
     })
-    
-    

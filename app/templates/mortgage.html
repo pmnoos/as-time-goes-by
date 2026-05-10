@@ -53,7 +53,7 @@
         </div>
 
         <!-- Summary cards -->
-        {% if schedule %}
+        {% if schedule|length > 0 %}
         <div class="mortgage-results">
 
             <!-- Savings banner -->
@@ -112,7 +112,7 @@
     </div>
 
     <!-- Amortization table -->
-    {% if schedule %}
+    {% if schedule|length > 0 %}
     <div class="amortization-wrapper">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
             <h2 style="font-size:1.2rem;font-weight:600">
@@ -123,7 +123,7 @@
                 {% endif %}
             </h2>
             <span style="font-size:0.85rem;color:var(--muted)">
-                Showing months {{ (page - 1) * per_page + 1 }} — {{ schedule[-1].month }} of {{ actual_months }}
+                Showing months {{ (page - 1) * per_page + 1 }} — {{ schedule[-1].month if schedule|length > 0 else '' }} of {{ actual_months }}
             </span>
         </div>
 
@@ -143,19 +143,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in schedule %}
-                    <tr class="{% if row.year == check_year %}highlight-row{% endif %}">
-                        <td>{{ row.month }}</td>
-                        <td>{{ row.year }}</td>
-                        <td>${{ "{:,.2f}".format(monthly_payment) }}</td>
-                        <td>${{ "{:,.2f}".format(row.principal) }}</td>
-                        <td>${{ "{:,.2f}".format(row.interest) }}</td>
-                        {% if extra_repayment and extra_repayment > 0 %}
-                        <td style="color:var(--teal);font-weight:500">${{ "{:,.2f}".format(row.extra) }}</td>
-                        {% endif %}
-                        <td>${{ "{:,.2f}".format(row.balance) }}</td>
-                    </tr>
-                    {% endfor %}
+                    {% if schedule|length > 0 %}
+                        {% for row in schedule %}
+                        <tr class="{% if row.year == check_year %}highlight-row{% endif %}">
+                            <td>{{ row.month }}</td>
+                            <td>{{ row.year }}</td>
+                            <td>${{ "{:,.2f}".format(monthly_payment) }}</td>
+                            <td>${{ "{:,.2f}".format(row.principal) }}</td>
+                            <td>${{ "{:,.2f}".format(row.interest) }}</td>
+                            {% if extra_repayment and extra_repayment > 0 %}
+                            <td style="color:var(--teal);font-weight:500">${{ "{:,.2f}".format(row.extra) }}</td>
+                            {% endif %}
+                            <td>${{ "{:,.2f}".format(row.balance) }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
                 </tbody>
             </table>
         </div>

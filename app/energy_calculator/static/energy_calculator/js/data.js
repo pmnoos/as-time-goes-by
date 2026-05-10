@@ -1,0 +1,30 @@
+export const STATES = [
+  { abbr: 'QLD', name: 'Queensland',         rate: 27.2 },
+  { abbr: 'NSW', name: 'New South Wales',     rate: 28.5 },
+  { abbr: 'VIC', name: 'Victoria',            rate: 26.8 },
+  { abbr: 'SA',  name: 'South Australia',     rate: 32.1 },
+  { abbr: 'WA',  name: 'Western Australia',   rate: 32.4 },
+  { abbr: 'ACT', name: 'ACT',                 rate: 25.0 },
+  { abbr: 'TAS', name: 'Tasmania',            rate: 26.2 },
+  { abbr: 'NT',  name: 'Northern Territory',  rate: 28.0 },
+];
+
+export const APPLIANCES = [
+  { name: 'Air conditioner',  watts: 2500, hours: 4   },
+  { name: 'Fridge',           watts: 150,  hours: 24  },
+  { name: 'TV',               watts: 200,  hours: 4   },
+  { name: 'Washing machine',  watts: 500,  hours: 1   },
+  { name: 'Clothes dryer',    watts: 3000, hours: 1   },
+  { name: 'Dishwasher',       watts: 1800, hours: 1   },
+  { name: 'Microwave',        watts: 1200, hours: 0.5 },
+  { name: 'Electric oven',    watts: 2400, hours: 1   },
+  { name: 'Toaster',          watts: 900,  hours: 0.2 },
+  { name: 'Kettle',           watts: 2000, hours: 0.2 },
+  { name: 'Computer',         watts: 150,  hours: 6   },
+  { name: 'Laptop',           watts: 50,   hours: 6   },
+  { name: 'Vacuum cleaner',   watts: 1000, hours: 0.5 },
+  { name: 'Iron',             watts: 1200, hours: 0.5 },
+  { name: 'Heater',           watts: 2000, hours: 3   },
+  { name: 'Fan',              watts: 50,   hours: 8   },
+  { name: 'Light bulb (LED)', watts: 10,   hours: 5   },
+];

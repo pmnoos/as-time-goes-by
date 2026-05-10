@@ -1,0 +1,250 @@
+/* ── Energy Calculator Styles ── */
+
+.ec-wrap {
+  max-width: 780px;
+  margin: 2rem auto;
+  padding: 0 1rem 3rem;
+  font-family: inherit;
+}
+
+/* Sections */
+.ec-section {
+  margin-bottom: 1.25rem;
+}
+
+.ec-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin-bottom: 0.35rem;
+}
+
+.ec-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: #fff;
+  color: #111827;
+}
+
+/* Add row */
+.ec-add-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.ec-add-group {
+  flex: 1;
+}
+
+.ec-btn-add {
+  padding: 0.5rem 1.25rem;
+  background: #2ea87a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  align-self: flex-end;
+}
+.ec-btn-add:hover { background: #25916a; }
+
+/* Summary cards */
+.ec-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.ec-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ec-card-highlight {
+  background: #f0fdf9;
+  border-color: #6ee7b7;
+}
+
+.ec-card-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+}
+
+.ec-card-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.ec-card-highlight .ec-card-value {
+  color: #047857;
+}
+
+/* Table */
+.ec-table-wrap {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.ec-table-head {
+  display: grid;
+  grid-template-columns: 1fr 75px 85px 80px 90px 68px 36px;
+  gap: 6px;
+  padding: 0.55rem 1rem;
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+}
+
+.tc { text-align: center; }
+.tr { text-align: right; }
+
+.ec-row {
+  display: grid;
+  grid-template-columns: 1fr 75px 85px 80px 90px 68px 36px;
+  gap: 6px;
+  padding: 0.6rem 1rem;
+  align-items: center;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.1s;
+}
+
+.ec-row:last-of-type { border-bottom: none; }
+.ec-row:hover { background: #fafafa; }
+.ec-row-off { opacity: 0.45; }
+
+.ec-row-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.ec-num {
+  width: 100%;
+  text-align: center;
+  font-size: 0.825rem;
+  padding: 0.3rem 0.2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  color: #111827;
+  -moz-appearance: textfield;
+}
+.ec-num::-webkit-inner-spin-button { -webkit-appearance: none; }
+.ec-num:focus {
+  outline: 2px solid #6ee7b7;
+  border-color: transparent;
+}
+
+.ec-kwh {
+  font-size: 0.825rem;
+  color: #6b7280;
+}
+
+.ec-cost {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #047857;
+}
+
+.ec-toggle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+
+.ec-on  { background: #2ea87a; color: #fff; }
+.ec-off { background: #e5e7eb; color: #6b7280; }
+.ec-on:hover  { background: #25916a; }
+.ec-off:hover { background: #d1d5db; }
+
+.ec-del {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d1d5db;
+  font-size: 1rem;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+}
+.ec-del:hover { color: #ef4444; background: #fef2f2; }
+
+.ec-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.ec-total-row {
+  display: grid;
+  grid-template-columns: 1fr 75px 85px 80px 90px 68px 36px;
+  gap: 6px;
+  padding: 0.6rem 1rem;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #374151;
+  align-items: center;
+}
+
+/* Note */
+.ec-note {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0.5rem 0 0;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 620px) {
+  .ec-table-head,
+  .ec-row,
+  .ec-total-row {
+    grid-template-columns: 1fr 70px 75px 80px 36px;
+  }
+  /* Hide kWh/day and On/Off columns on small screens */
+  .ec-table-head span:nth-child(4),
+  .ec-table-head span:nth-child(6),
+  .ec-row .ec-kwh,
+  .ec-row .ec-toggle,
+  .ec-total-row span:nth-child(4),
+  .ec-total-row span:nth-child(6) {
+    display: none;
+  }
+}

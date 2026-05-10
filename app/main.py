@@ -23,9 +23,18 @@ app = FastAPI(title="As Time Goes By")
 # Middleware MUST come before everything else
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "changeme"))
 
+
+# Mount static for main app and energy_calculator
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/energy-static", StaticFiles(directory="app/energy_calculator/static"), name="energy_static")
+
+# Include routers
 app.include_router(router)
 app.include_router(auth_router)
+
+# Import and include energy_calculator router
+from .energy_calculator.router import router as energy_router
+app.include_router(energy_router)
 
 # Admin auth
 class AdminAuth(AuthenticationBackend):
