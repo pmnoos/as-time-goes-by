@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<!-- Hero with photo -->
+<!-- ── Hero with photo — full width like landing page ── -->
 <div class="about-me-hero">
     <div class="about-me-hero-image">
         <img src="/static/images/positano.jpg" alt="Relaxing in Positano, Italy">
@@ -21,108 +21,255 @@
     </div>
 </div>
 
-<div class="about-page">
+<!-- ── Main layout ── -->
+<div class="about-me-layout" style="margin-top:2rem;">
 
-    <div class="about-me-layout">
+    <!-- ── Main content ── -->
+    <div class="about-me-main">
 
-        <div class="about-me-main">
-
-            <div class="about-section about-section-warm" id="my-story">
-                <h2>My story</h2>
-                <p>
-                    <!-- ADD YOUR BIOGRAPHY EXCERPT HERE -->
-                    Your biography excerpt goes here. Tell your story in your own
-                    words — where you grew up, your career, your life journey to
-                    this point. This is where your readers will connect with you
-                    as a real person.
-                </p>
-            </div>
-
-            <div class="about-section about-section-teal">
-                <h2>My retirement journey</h2>
-                <p>
-                    <!-- ADD YOUR RETIREMENT STORY HERE -->
-                    What was your transition to retirement like? What surprised you?
-                    What did you wish you'd known? This is where your authenticity
-                    shines — share the real experience, not just the highlights.
-                </p>
-            </div>
-
-            <div class="about-section about-section-purple">
-                <h2>Why I started this blog</h2>
-                <p>
-                    <!-- ADD YOUR MOTIVATION HERE -->
-                    What gap did you notice? What made you decide to start writing?
-                    This is one of the most important sections — readers want to
-                    understand your motivation and know you're genuine.
-                </p>
-            </div>
-
-            <div class="about-section about-section-gold">
-                <h2>What I hope you get from it</h2>
-                <p>
-                    <!-- ADD YOUR HOPES FOR READERS HERE -->
-                    What do you want readers to walk away with? What would make
-                    this blog feel worthwhile to you? What's the one thing you
-                    want every reader to know?
-                </p>
-            </div>
-
-        </div>
-
-        <div class="about-me-sidebar">
-
-            <div class="about-me-card about-me-card-photo">
-                <img src="/static/images/positano.jpg" alt="In Positano, Italy"
-                     style="width:100%;border-radius:8px;margin-bottom:1rem">
-                <p style="font-size:0.82rem;color:var(--muted);text-align:center">
-                    Positano, Italy 🇮🇹
-                </p>
-            </div>
-
-            <div class="about-me-card">
-                <h3>Quick facts</h3>
-                <ul class="about-facts">
-                    <li>📍 Brisbane, Queensland</li>
-                    <li>🎂 Retired <!-- ADD YEAR --></li>
-                    <li>✈️ Loves to travel</li>
-                    <li>✍️ Writing since <!-- ADD YEAR --></li>
-                    <li>☀️ Proudly Australian</li>
-                </ul>
-            </div>
-
-            <div class="about-me-card">
-                <h3>Topics I write about</h3>
-                <div class="tag-list">
-                    <span class="tag">Retirement</span>
-                    <span class="tag">Superannuation</span>
-                    <span class="tag">Aged Pension</span>
-                    <span class="tag">Health</span>
-                    <span class="tag">Housing</span>
-                    <span class="tag">Legal</span>
-                    <span class="tag">Technology</span>
-                    <span class="tag">Community</span>
-                    <span class="tag">Travel</span>
-                    <span class="tag">Life</span>
+        <!-- My Story -->
+        <div class="about-section about-section-warm" id="my-story">
+            <h2>My story</h2>
+            <div id="my-story-box" class="section-collapsed">
+                <div id="my-story-content">
+                    <p>I entered this world in Sutton Coldfield, Birmingham, England, in 1940 during the dark years of war. Like many families of that era, ours moved frequently in search of stability, first to Epping Forest in London and later to Dover after the war, where my parents opened a guest house. Dover became the place I most associated with childhood and the sea that would later shape much of my early life.</p>
+                    <p>My education was something of a mixed journey, passing through primary and secondary schools, including time at a private boarding school for boys. My brother and I spent two terms there before I contracted ringworm, which in those days was considered highly contagious and resulted in a lengthy stay back home. School and I were never entirely suited to one another, and at fifteen I left to join the Merchant Navy.</p>
+                    <p>The sea became my education. Over twelve years I worked my way up to Second Steward and relieving Chief Steward, travelling widely and learning about people, discipline, hardship, and survival. Between voyages I worked in hotels, experiences that would later prove valuable in business and hospitality.</p>
+                    <p>During those years I met Sheila, and together we built a family blessed with five children — Paul, Julia, Kathryn, Phillip, and later Carolyn, our Kiwi daughter born after we emigrated to New Zealand in 1967.</p>
+                    <p>Like many migrants searching for opportunity, we found life in Britain difficult and chose to begin again on the other side of the world. In New Zealand I worked for Air New Zealand for eight years while also building my own knitwear business, MAGNER KNITWEAR, balancing family life with ambition and uncertainty.</p>
+                    <p>In 1988 another chapter began when we moved to Australia during World Expo 88, where I worked as a chef in the Britannia UK Pavilion. From there life took many unexpected turns — including purchasing a Silvio's Pizza franchise, a decision that taught me some hard lessons. Later, an invitation to Noosa opened the door to the world of management rights and resort life at Bali Hai Apartments, beginning yet another reinvention in a life that had already crossed oceans many times.</p>
+                    <p>Life has taken me across oceans, through challenges, opportunities, heartbreak, adventure, and countless unexpected turns. These pages are not simply a record of where I have been, but reflections on the people, places, and moments that shaped the journey still unfolding — as time goes by.</p>
                 </div>
             </div>
-
-            <div class="about-me-card about-me-card-disclaimer">
-                <h3>⚠️ A note on advice</h3>
-                <p>
-                    I'm not a financial adviser, lawyer or doctor. Everything I
-                    write comes from personal experience and research. Always
-                    seek qualified professional advice for your specific situation.
-                </p>
-            </div>
-
+            <button class="readmore-btn" data-box="my-story-box" data-target="my-story" type="button">Read more</button>
         </div>
+
+        <!-- Retirement journey -->
+        <div class="about-section about-section-teal" id="retirement-journey">
+            <h2>My retirement journey</h2>
+            <div id="retirement-journey-box" class="section-collapsed">
+                <div id="retirement-journey-content">
+                    <p>Retirement was not something that arrived suddenly for me with a gold watch and a farewell handshake. Like much of my life, it came in stages — through changing careers, failed ventures, new opportunities, health challenges, and the gradual realisation that time itself was beginning to move differently.</p>
+                    <p>There were moments when retirement felt liberating, and other times when it felt uncertain. I discovered that many retirees quietly struggle with questions nobody really prepares you for: Who am I now? What still gives me purpose? How do I stay connected to the world around me? And how do I adjust to the reality of getting older?</p>
+                    <p>One of the biggest lessons I learned is that retirement is not really an ending. It is another transition — one that can still contain creativity, curiosity, friendship, learning, and even reinvention. That is partly why I started this blog. I wanted a place where ordinary people could talk honestly about retirement, ageing, finances, health, relationships, and the changing world around us without pretending life is perfect.</p>
+                    <p>As Time Goes By is really about navigating this stage of life together — with humour when we can, honesty when we need it, and the understanding that none of us truly have all the answers.</p>
+                </div>
+            </div>
+            <button class="readmore-btn" data-box="retirement-journey-box" data-target="retirement-journey" type="button">Read more</button>
+        </div>
+
+        <!-- Why I started -->
+        <div class="about-section about-section-purple" id="why-started">
+            <h2>Why I started this blog</h2>
+            <div id="why-started-box" class="section-collapsed">
+                <div id="why-started-content">
+                    <p>As I grew older and moved further into retirement, I began searching online for information, ideas, and honest conversations about this stage of life. What I found was often disappointing. Much of it felt either overly polished, filled with financial jargon, or written by people trying to sell something.</p>
+                    <p>There seemed to be very few places where ordinary retirees could simply talk honestly about the realities of getting older — the good parts and the difficult parts alike.</p>
+                    <p>Retirement is not just about pensions and superannuation. It is about identity, purpose, relationships, health, loneliness, change, and learning how to navigate a world that often seems to move faster every year. Many of us carry decades of experience, memories, mistakes, humour, resilience, and stories that rarely get spoken about openly.</p>
+                    <p>I started As Time Goes By because I wanted to create the kind of place I would have liked to find myself — somewhere thoughtful, practical, reflective, and real.</p>
+                    <p>This blog is not written by an expert with all the answers. It is written by someone who has lived through war-time Britain, migration, business successes and failures, family joys and heartbreaks, reinvention, ageing, and retirement itself.</p>
+                    <p>Some articles may be practical. Others may be reflective or personal. Sometimes I may simply write about the small observations that come with growing older in a rapidly changing world. If anything I write helps someone feel a little less alone, a little better informed, or simply gives them something meaningful to think about over a morning cup of tea, then this blog will have served its purpose.</p>
+                </div>
+            </div>
+            <button class="readmore-btn" data-box="why-started-box" data-target="why-started" type="button">Read more</button>
+        </div>
+
+        <!-- What I hope -->
+        <div class="about-section about-section-gold" id="what-i-hope">
+            <h2>What I hope you get from it</h2>
+            <div id="what-i-hope-box" class="section-collapsed">
+                <div id="what-i-hope-content">
+                    <p>I hope this blog becomes a place where people feel understood. Getting older is something we all experience, yet many people go through it quietly — carrying worries, memories, regrets, humour, and questions they rarely speak about openly. Life does not suddenly become simple when we retire. In many ways, it becomes a different kind of journey altogether.</p>
+                    <p>Through these pages I hope readers find useful information, thoughtful reflections, a few laughs now and then, and perhaps the reassurance that they are not alone in the challenges and changes that come with ageing.</p>
+                    <p>Some posts may help practically. Others may simply encourage reflection or spark memories of times and places long gone. Sometimes the greatest comfort comes from realising that someone else has felt the same uncertainty, frustration, hope, or curiosity that we ourselves feel.</p>
+                    <p>If there is one thing I would want every reader to know, it is this: Growing older does not mean becoming invisible.</p>
+                    <p>Our experiences still matter. Our stories still matter. Our opinions, memories, wisdom, humour, and even our mistakes still have value. There is still meaning to be found in learning, sharing, adapting, and staying connected to the world around us.</p>
+                    <p>If As Time Goes By can offer companionship, understanding, or even just a few moments of thoughtful reading over a quiet cup of tea, then I will consider it worthwhile.</p>
+                </div>
+            </div>
+            <button class="readmore-btn" data-box="what-i-hope-box" data-target="what-i-hope" type="button">Read more</button>
+        </div>
+
     </div>
 
-    <div class="about-cta">
-        <p>Have a question or a topic you'd like me to cover?</p>
-        <a href="/" class="btn">Read the latest posts →</a>
-    </div>
+    <!-- ── Sidebar ── -->
+    <div class="about-me-sidebar">
 
+        <div class="about-me-card about-me-card-photo">
+            <img src="/static/images/positano.jpg" alt="In Positano, Italy"
+                 style="width:100%;border-radius:8px;margin-bottom:1rem">
+            <p style="font-size:0.82rem;color:var(--muted);text-align:center">
+                Positano, Italy 🇮🇹
+            </p>
+        </div>
+
+        <div class="about-me-card">
+            <h3>Quick facts</h3>
+            <ul class="about-facts">
+                <li>📍 Brisbane, Queensland</li>
+                <li>🎂 Retired <!-- ADD YEAR --></li>
+                <li>✈️ Loves to travel</li>
+                <li>✍️ Writing since <!-- ADD YEAR --></li>
+                <li>☀️ Proudly Australian</li>
+            </ul>
+        </div>
+
+        <div class="about-me-card">
+            <h3>Topics I write about</h3>
+            <div class="tag-list">
+                <span class="tag">Retirement</span>
+                <span class="tag">Superannuation</span>
+                <span class="tag">Aged Pension</span>
+                <span class="tag">Health</span>
+                <span class="tag">Housing</span>
+                <span class="tag">Legal</span>
+                <span class="tag">Technology</span>
+                <span class="tag">Community</span>
+                <span class="tag">Travel</span>
+                <span class="tag">Life</span>
+            </div>
+        </div>
+
+        <div class="about-me-card about-me-card-disclaimer">
+            <h3>⚠️ A note on advice</h3>
+            <p>
+                I'm not a financial adviser, lawyer or doctor. Everything I
+                write comes from personal experience and research. Always
+                seek qualified professional advice for your specific situation.
+            </p>
+        </div>
+
+    </div>
 </div>
+
+<div class="about-cta" style="margin-top:2rem;">
+    <p>Have a question or a topic you'd like me to cover?</p>
+    <a href="/" class="btn">Read the latest posts →</a>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+{{ super() }}
+<style>
+    /* ── Hero — full width, rounded like landing hero ── */
+   /* ── Hero — override the 100vw breakout from style.css ── */
+    .about-me-hero {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 420px;
+}
+    /* ── Main layout — full container width, no about-page constraint ── */
+    .about-me-layout {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 1.5rem;
+        align-items: start;
+        max-width: 100%;
+    }
+
+    /* ── Collapsed state ── */
+    .section-collapsed {
+        max-height: 220px;
+        overflow: hidden;
+        position: relative;
+        transition: max-height 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    .section-collapsed::after {
+        content: '';
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        height: 70px;
+        background: linear-gradient(to bottom, transparent 0%, #fff 90%);
+        pointer-events: none;
+    }
+
+    /* ── Expanded state ── */
+    .section-expanded {
+        max-height: 3000px;
+        overflow: visible;
+        transition: max-height 0.6s cubic-bezier(.4,0,.2,1);
+    }
+    .section-expanded::after {
+        display: none;
+    }
+
+    /* ── Dark mode fade ── */
+    [data-theme="dark"] .section-collapsed::after {
+        background: linear-gradient(to bottom, transparent 0%, #242422 90%);
+    }
+
+    /* ── Shared read more button ── */
+    .readmore-btn {
+        display: block;
+        margin: 1rem auto 0;
+        padding: 0.5rem 1.5rem;
+        background: transparent !important;
+        border: 1.5px solid var(--purple);
+        color: var(--purple) !important;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .readmore-btn:hover {
+        background: #eeedfe !important;
+    }
+
+    /* ── Section content paragraph spacing ── */
+    .about-section p {
+        margin-bottom: 1rem;
+        line-height: 1.8;
+        color: var(--text);
+    }
+    .about-section p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .about-me-layout {
+            grid-template-columns: 1fr;
+        }
+        .about-me-hero {
+            border-radius: 12px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.readmore-btn').forEach(function (btn) {
+            var boxId    = btn.getAttribute('data-box');
+            var targetId = btn.getAttribute('data-target');
+            var box      = document.getElementById(boxId);
+            var target   = document.getElementById(targetId);
+
+            if (!box) return;
+
+            btn.addEventListener('click', function () {
+                var isCollapsed = box.classList.contains('section-collapsed');
+                if (isCollapsed) {
+                    box.classList.remove('section-collapsed');
+                    box.classList.add('section-expanded');
+                    btn.textContent = 'Show less';
+                } else {
+                    box.classList.remove('section-expanded');
+                    box.classList.add('section-collapsed');
+                    btn.textContent = 'Read more';
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<!-- Hero banner -->
+<!-- ── Hero banner — full width like landing page ── -->
 <div class="about-hero-banner">
     <div class="about-hero-overlay">
         <h1>About This Blog</h1>
@@ -12,7 +12,8 @@
     </div>
 </div>
 
-<div class="about-page">
+<!-- ── Main content — no about-page width constraint ── -->
+<div style="margin-top: 2rem;">
 
     <!-- Mission statement -->
     <div class="about-mission">
@@ -122,23 +123,24 @@
         </div>
     </div>
 
-  <div class="about-cta">
-    <p>Want to know more about the person behind the blog?</p>
-    <button class="btn" onclick="openModal()">📖 Read My Story</button>
-    <a href="/about-me" class="btn btn-outline" style="margin-left:0.75rem">About Me page →</a>
+    <!-- CTA -->
+    <div class="about-cta">
+        <p>Want to know more about the person behind the blog?</p>
+        <button class="btn" onclick="openModal()">📖 Read My Story</button>
+        <a href="/about-me" class="btn btn-outline" style="margin-left:0.75rem">About Me page →</a>
+    </div>
+
 </div>
 
-<!-- Modal -->
+<!-- ── Story Modal ── -->
 <div class="modal-overlay" id="storyModal" onclick="closeModalOutside(event)">
     <div class="modal-box">
         <button class="modal-close" onclick="closeModal()">✕</button>
-
         <div class="modal-header">
             <span class="modal-icon">📖</span>
             <h2>My Full Story</h2>
             <p>Choose how you'd like to read my autobiography</p>
         </div>
-
         <div class="bio-links">
             <a href="https://autobio-app.onrender.com/" target="_blank"
                class="bio-link-card" onclick="closeModal()">
@@ -149,7 +151,6 @@
                 </div>
                 <span class="bio-link-arrow">→</span>
             </a>
-
             <a href="#" class="bio-link-card" onclick="openPdfModal(); return false;">
                 <span class="bio-link-icon">📄</span>
                 <div>
@@ -158,7 +159,6 @@
                 </div>
                 <span class="bio-link-arrow">↓</span>
             </a>
-
             <div class="bio-link-card bio-link-ebook">
                 <span class="bio-link-icon">📱</span>
                 <div>
@@ -168,14 +168,13 @@
                 <span class="bio-link-arrow" style="opacity:0.3">⋯</span>
             </div>
         </div>
-
         <div class="modal-footer">
             <button class="btn btn-outline" onclick="closeModal()">Maybe later</button>
         </div>
     </div>
 </div>
 
-<!-- PDF Modal -->
+<!-- ── PDF Modal ── -->
 <div class="modal-overlay" id="pdfModal" onclick="closePdfModalOutside(event)">
     <div class="modal-box modal-box-pdf">
         <button class="modal-close" onclick="closePdfModal()">✕</button>
@@ -183,14 +182,139 @@
             <span class="modal-icon">📄</span>
             <h2>Autobiography PDF</h2>
         </div>
-        <div style="height:70vh; width:100%;">
-            <iframe id="pdfFrame" src="/static/downloads/autobiography.pdf" width="100%" height="100%" style="border:none;"></iframe>
+        <div style="height:70vh;width:100%;">
+            <iframe id="pdfFrame" src="/static/downloads/autobiography.pdf"
+                    width="100%" height="100%" style="border:none;"></iframe>
         </div>
         <div class="modal-footer">
             <button class="btn btn-outline" onclick="closePdfModal()">Close PDF</button>
         </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+{{ super() }}
+<style>
+    /* ── Hero banner — override 100vw breakout, match landing width ── */
+    .about-hero-banner {
+        width: 100% !important;
+        margin-left: 0 !important;
+        border-radius: 20px;
+        height: 320px;
+        background: linear-gradient(135deg,
+            #7c3aed 0%, #db2777 30%, #d97706 60%, #0d9488 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-hero-banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+    }
+
+    .about-hero-overlay {
+        position: relative;
+        text-align: center;
+        color: #fff;
+        padding: 2rem;
+        max-width: 700px;
+    }
+
+    .about-hero-overlay h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .about-hero-overlay p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        opacity: 0.92;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+
+    /* ── Remove about-page max-width constraint ── */
+    .about-page {
+        max-width: 100% !important;
+    }
+
+    /* ── Section paragraph spacing ── */
+    .about-section p {
+        margin-bottom: 1rem;
+        line-height: 1.8;
+        color: var(--text);
+    }
+    .about-section p:last-child { margin-bottom: 0; }
+
+    /* ── Bio link cards ── */
+    .bio-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .bio-link-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
+        border: 1.5px solid #e2e0d8;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        transition: border-color 0.2s, background 0.2s;
+        cursor: pointer;
+    }
+
+    .bio-link-card:hover {
+        border-color: var(--purple);
+        background: #faf5ff;
+    }
+
+    .bio-link-ebook {
+        opacity: 0.6;
+        cursor: default;
+    }
+    .bio-link-ebook:hover {
+        border-color: #e2e0d8;
+        background: transparent;
+    }
+
+    .bio-link-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+    .bio-link-card div { flex: 1; }
+    .bio-link-card strong { display: block; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .bio-link-card p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+
+    .bio-link-arrow {
+        font-size: 1.1rem;
+        color: var(--purple);
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    /* ── PDF modal wider ── */
+    .modal-box-pdf {
+        max-width: 860px !important;
+        width: 95vw !important;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .about-hero-banner { border-radius: 12px; height: 240px; }
+        .about-hero-overlay h1 { font-size: 1.8rem; }
+    }
+</style>
 
 <script>
     function openModal() {
@@ -209,23 +333,26 @@
         }
     }
 
-
-    // PDF Modal logic
     function openPdfModal() {
+        closeModal();
         document.getElementById('pdfModal').classList.add('active');
     }
+
     function closePdfModal() {
         document.getElementById('pdfModal').classList.remove('active');
     }
+
     function closePdfModalOutside(event) {
         if (event.target.classList.contains('modal-overlay')) {
             closePdfModal();
         }
     }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeModal();
+            closePdfModal();
+        }
     });
 </script>
-
-</div>
 {% endblock %}
