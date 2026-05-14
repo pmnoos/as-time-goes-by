@@ -88,12 +88,13 @@
             <!-- Desktop nav links -->
             <div class="hidden md:flex items-center gap-1">
                 <a href="/" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">Home</a>
-                <a href="/blog" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">BPost</a>
+                <a href="/blog" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">Post</a>
                 <a href="/search" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">Search</a>
                 <a href="/mortgage" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">Mortgage</a>
                 <a href="/energy-calculator" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">Energy</a>
                 <a href="/about" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">About</a>
                 <a href="/about-me" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">About Me</a>
+                <a href="/contact" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-slate-300 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-slate-700 transition-colors">Contact</a>
 <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
     .dark body { background-color: #0f172a; color: #e2e0d8; }
@@ -116,6 +117,9 @@
 }
 </style>
                 {% if current_user %}
+                    <span class="px-3 py-2 text-sm text-gray-500 dark:text-slate-400 font-medium">
+                        👤 {{ current_user.username }}
+                    </span>
                     <a href="/posts/new" 
                     class="ml-2 px-4 py-2 bg-brand-500 hover:bg-brand-600 
                             text-white font-medium text-sm rounded-lg transition-colors">
@@ -199,6 +203,7 @@
                 <a href="/energy-calculator" class="text-sm text-gray-500 dark:text-slate-400 hover:text-brand-600 transition-colors">Energy</a>
                 <a href="/about" class="text-sm text-gray-500 dark:text-slate-400 hover:text-brand-600 transition-colors">About</a>
                 <a href="/about-me" class="text-sm text-gray-500 dark:text-slate-400 hover:text-brand-600 transition-colors">About Me</a>
+                <a href="/contact" class="text-sm text-gray-500 dark:text-slate-400 hover:text-brand-600 transition-colors">Contact</a>
             </div>
         </div>
 
@@ -240,5 +245,41 @@
 </script>
 
 {% block extra_scripts %}{% endblock %}
+<!-- ── Back to top button ── -->
+<button id="back-to-top"
+    onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+    aria-label="Back to top"
+    style="
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--purple);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s, transform 0.2s;
+        z-index: 999;
+    ">
+    ↑
+</button>
+
+<script>
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            backToTop.style.display = 'flex';
+        } else {
+            backToTop.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

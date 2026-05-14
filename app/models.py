@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Table, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
+from datetime import datetime
 
 post_tags = Table(
     "post_tags", Base.metadata,
@@ -58,3 +59,19 @@ class Comment(Base):
 
     post   = relationship("Post", back_populates="comments")
     author = relationship("User", back_populates="comments")    
+    
+# ── Add this class to your existing models.py ──
+
+class ContactMessage(Base):
+    __tablename__ = "contact_messages"
+
+    id         = Column(Integer, primary_key=True, index=True)
+    name       = Column(String, nullable=False)
+    email      = Column(String, nullable=False)
+    subject    = Column(String, nullable=False)
+    message    = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    is_read    = Column(Boolean, default=False)
+
+    def __repr__(self):
+        return f"<ContactMessage from {self.name} ({self.email})>"    

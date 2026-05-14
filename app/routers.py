@@ -13,6 +13,7 @@ from pathlib import Path
 from .schemas import CATEGORIES
 from datetime import datetime
 import logging
+from .email import send_contact_email
 
 router = APIRouter()
 
@@ -112,30 +113,36 @@ def blog_category_page(
 # SEARCH
 # ─────────────────────────────────────────────
 
+# ── Replace your existing search route in routers.py with this ──
+
 @router.get("/search", response_class=HTMLResponse)
 def search(
     request: Request,
     q: str = "",
+    category: str = "",
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
     posts = []
-    if q:
-        posts = (
-            db.query(models.Post)
-            .filter(
+    if q or category:                    # ← changed from just "if q"
+        query = db.query(models.Post)
+
+        if q:
+            query = query.filter(
                 models.Post.title.ilike(f"%{q}%") |
                 models.Post.body.ilike(f"%{q}%")
             )
-            .order_by(models.Post.created_at.desc())
-            .all()
-        )
+        if category:
+            query = query.filter(models.Post.category == category)
+
+        posts = query.order_by(models.Post.created_at.desc()).all()
+
     return templates.TemplateResponse(request, "search.html", {
         "posts": posts,
         "current_user": current_user,
         "q": q,
+        "category": category,
     })
-
 
 # ─────────────────────────────────────────────
 # POSTS — CREATE
@@ -589,3 +596,69 @@ def about_me_page(request: Request, current_user=Depends(get_current_user)):
     return templates.TemplateResponse(request, "about_me.html", {
         "current_user": current_user,
     })
+    
+    
+ # ── Add these imports to the top of your routers.py ──
+# from .email import send_contact_email
+
+# ── Add this import to your existing imports ──
+# from . import models  (already there)
+# Make sure ContactMessage is in your models
+
+
+# ─────────────────────────────────────────────
+# CONTACT
+# ─────────────────────────────────────────────
+
+@router.get("/contact", response_class=HTMLResponse)
+def contact_page(request: Request, current_user=Depends(get_current_user)):
+    return templates.TemplateResponse(request, "contact.html", {
+        "current_user": current_user,
+        "success": False,
+        "error": None,
+    })
+
+
+@router.post("/contact", response_class=HTMLResponse)
+def contact_submit(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    subject: str = Form(...),
+    message: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    # Save to database
+    contact_msg = models.ContactMessage(
+        name=name,
+        email=email,
+        subject=subject,
+        message=message,
+    )
+    db.add(contact_msg)
+    db.commit()
+
+    # Send email via Resend
+    email_sent = send_contact_email(
+        name=name,
+        email=email,
+        subject=subject,
+        message=message,
+    )
+
+    if not email_sent:
+        # Message is saved to DB even if email fails
+        return templates.TemplateResponse(request, "contact.html", {
+            "current_user": current_user,
+            "success": True,
+            "email_sent": False,
+            "error": None,
+        })
+
+    return templates.TemplateResponse(request, "contact.html", {
+        "current_user": current_user,
+        "success": True,
+        "email_sent": True,
+        "error": None,
+    })   

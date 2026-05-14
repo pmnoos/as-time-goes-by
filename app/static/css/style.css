@@ -855,6 +855,7 @@ body {
     transition: background 0.2s;
 }
 .floating-card:hover { background: rgba(255,255,255,0.28); }
+a.floating-card { cursor: pointer; text-decoration: none; }
 
 .landing-welcome {
     display: grid;
@@ -959,4 +960,18 @@ body {
 @media (max-width: 480px) {
     .landing-topics { grid-template-columns: 1fr; }
     .promise-grid   { grid-template-columns: 1fr; }
+}
+
+/* ── Search highlight ── */
+mark.search-highlight {
+    background: #fef08a;
+    color: #1a1a18;
+    border-radius: 3px;
+    padding: 0 2px;
+    font-style: normal;
+}
+
+[data-theme="dark"] mark.search-highlight {
+    background: #854d0e;
+    color: #fef9c3;
 }

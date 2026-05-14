@@ -17,7 +17,8 @@
         {{ post.cover_caption }}
     </p>
     {% endif %}
-  
+{% endif %}
+
 
     <!-- ── Post header ── -->
     <header class="mb-8">
@@ -45,8 +46,11 @@
                class="font-medium text-gray-700 dark:text-slate-300 hover:text-brand-600 transition-colors">
                 {{ post.author.username }}
             </a>
-            <span class="text-gray-300 dark:text-slate-600">·</span>
-            <time>{{ post.created_at.strftime('%B %d, %Y') }}</time>
+           <time>{{ post.created_at.strftime('%B %d, %Y') }}</time>
+                <span class="text-gray-300 dark:text-slate-600">·</span>
+                <span class="flex items-center gap-1">
+                    📖 {{ reading_time(post.body) }} min read
+                </span>
         </div>
     </header>
 

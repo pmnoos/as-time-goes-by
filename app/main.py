@@ -42,8 +42,6 @@ class AdminAuth(AuthenticationBackend):
         form = await request.form()
         username = form.get("username")
         password = form.get("password")
-        print(f"[DEBUG] Admin login attempt: username={username}, password={password}")
-        print(f"[DEBUG] ENV: ADMIN_USERNAME={os.getenv('ADMIN_USERNAME')}, ADMIN_PASSWORD={os.getenv('ADMIN_PASSWORD')}")
         if username == os.getenv("ADMIN_USERNAME") and \
            password == os.getenv("ADMIN_PASSWORD"):
             request.session["admin"] = True
@@ -52,9 +50,10 @@ class AdminAuth(AuthenticationBackend):
         print("[DEBUG] Admin login failed!")
         return False
 
-    async def logout(self, request: Request) -> bool:
+    @app.get("/admin/logout")
+    async def admin_logout(request: Request):
         request.session.clear()
-        return True
+        return RedirectResponse(url="/", status_code=302)
 
     async def authenticate(self, request: Request):
         if not request.session.get("admin"):
@@ -115,6 +114,7 @@ class UserAdmin(ModelView, model=models.User):
 
 
 class TagAdmin(ModelView, model=models.Tag):
+    
     name = "Tag"
     name_plural = "Tags"
     icon = "fa-solid fa-tags"
@@ -124,6 +124,30 @@ class TagAdmin(ModelView, model=models.Tag):
     can_edit = True
     can_delete = True
 
+class ContactMessageAdmin(ModelView, model=models.ContactMessage):
+    name = "Contact Message"
+    name_plural = "Contact Messages"
+    icon = "fa-solid fa-envelope"
+    column_list = [
+        models.ContactMessage.id,
+        models.ContactMessage.name,
+        models.ContactMessage.email,
+        models.ContactMessage.subject,
+        models.ContactMessage.created_at,
+        models.ContactMessage.is_read,
+    ]
+    column_searchable_list = [
+        models.ContactMessage.name,
+        models.ContactMessage.email,
+        models.ContactMessage.subject,
+    ]
+    column_sortable_list = [
+        models.ContactMessage.created_at,
+        models.ContactMessage.is_read,
+    ]
+    can_create = False
+    can_edit = True
+    can_delete = True
 # Mount admin AFTER middleware
 authentication_backend = AdminAuth(secret_key=os.getenv("SECRET_KEY", "changeme"))
 admin = Admin(
@@ -137,7 +161,6 @@ admin.add_view(PostAdmin)
 admin.add_view(CommentAdmin)
 admin.add_view(UserAdmin)
 admin.add_view(TagAdmin)
+admin.add_view(ContactMessageAdmin)
 
-@app.get("/energy")
-def energy(request: Request):
-    return templates.TemplateResponse("energy/index.html", {"request": request})
+

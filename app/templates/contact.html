@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% block title %}Contact — As Time Goes By{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero banner ── -->
+<div class="contact-hero">
+    <div class="contact-hero-overlay">
+        <h1>Get in Touch</h1>
+        <p>Have a question, a topic suggestion, or just want to say hello?
+           I'd love to hear from you.</p>
+    </div>
+</div>
+
+<div style="max-width: 680px; margin: 2.5rem auto 0;">
+
+    {% if success %}
+    <!-- ── Success message ── -->
+    <div class="contact-success">
+        <div class="contact-success-icon">✅</div>
+        <h2>Message received!</h2>
+        <p>
+            Thank you for getting in touch{% if email_sent %} — I've received your message
+            and will get back to you as soon as I can{% else %} — your message has been
+            saved and I'll be in touch soon{% endif %}.
+        </p>
+        <a href="/" class="btn" style="margin-top: 1.5rem; display: inline-block;">
+            Back to home
+        </a>
+    </div>
+
+    {% else %}
+    <!-- ── Contact form ── -->
+    <div class="contact-card">
+
+        <div class="contact-intro">
+            <p>Whether you have a question about retirement, a topic you'd like me to
+               cover, feedback about the blog, or just want to share your own story —
+               I read every message personally.</p>
+        </div>
+
+        {% if error %}
+        <div class="error" style="margin-bottom: 1.25rem;">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/contact" class="contact-form">
+
+            <div class="contact-row">
+                <div class="form-group">
+                    <label for="name">Your name <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" required
+                           placeholder="e.g. Margaret Smith"
+                           autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Your email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required
+                           placeholder="e.g. margaret@email.com"
+                           autocomplete="email">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject <span class="required">*</span></label>
+                <select id="subject" name="subject" required class="contact-select">
+                    <option value="">— choose a subject —</option>
+                    <option value="General question">General question</option>
+                    <option value="Topic suggestion">Topic suggestion</option>
+                    <option value="Retirement & Super">Retirement & Super</option>
+                    <option value="Health & Aged Care">Health & Aged Care</option>
+                    <option value="Housing">Housing</option>
+                    <option value="Legal & Estate">Legal & Estate</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Energy Calculator">Energy Calculator</option>
+                    <option value="Mortgage Calculator">Mortgage Calculator</option>
+                    <option value="Feedback">Feedback about the blog</option>
+                    <option value="Just saying hello">Just saying hello 👋</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Your message <span class="required">*</span></label>
+                <textarea id="message" name="message" rows="6" required
+                          placeholder="Write your message here..."></textarea>
+                <span class="hint">I read every message personally and aim to reply within a few days.</span>
+            </div>
+
+            <button type="submit" class="btn contact-submit">
+                Send message →
+            </button>
+
+        </form>
+    </div>
+
+    <!-- ── Alternative contact info ── -->
+    <div class="contact-alternatives">
+        <div class="contact-alt-item">
+            <span class="contact-alt-icon">📍</span>
+            <div>
+                <strong>Based in</strong>
+                <p>Brisbane, Queensland, Australia</p>
+            </div>
+        </div>
+        <div class="contact-alt-item">
+            <span class="contact-alt-icon">⏱️</span>
+            <div>
+                <strong>Response time</strong>
+                <p>Usually within 2–3 days</p>
+            </div>
+        </div>
+        <div class="contact-alt-item">
+            <span class="contact-alt-icon">📖</span>
+            <div>
+                <strong>Want to know more?</strong>
+                <p><a href="/about-me">Read my story →</a></p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ super() }}
+<style>
+    /* ── Hero ── */
+    .contact-hero {
+        width: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        height: 280px;
+        background: linear-gradient(135deg,
+            #7c3aed 0%, #db2777 30%, #d97706 60%, #0d9488 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-bottom: 0;
+    }
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+    }
+    .contact-hero-overlay {
+        position: relative;
+        text-align: center;
+        color: #fff;
+        padding: 2rem;
+        max-width: 600px;
+    }
+    .contact-hero-overlay h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .contact-hero-overlay p {
+        font-size: 1rem;
+        line-height: 1.7;
+        opacity: 0.92;
+    }
+
+    /* ── Card ── */
+    .contact-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid #e5e7eb;
+        padding: 2rem 2.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .contact-intro {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .contact-intro p {
+        color: var(--muted);
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    /* ── Form layout ── */
+    .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .contact-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .contact-select {
+        width: 100%;
+        padding: 0.65rem 0.9rem;
+        border: 1.5px solid #d3d1c7;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        background: var(--surface);
+        color: var(--text);
+        transition: border-color 0.2s;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.9rem center;
+        padding-right: 2.5rem;
+    }
+    .contact-select:focus {
+        outline: none;
+        border-color: var(--purple);
+    }
+
+    .required { color: #ef4444; font-size: 0.8rem; }
+
+    .contact-submit {
+        align-self: flex-start;
+        padding: 0.7rem 2rem;
+        font-size: 1rem;
+    }
+
+    /* ── Success ── */
+    .contact-success {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid #e5e7eb;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .contact-success-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .contact-success h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: var(--text);
+    }
+    .contact-success p { color: var(--muted); line-height: 1.7; }
+
+    /* ── Alternatives ── */
+    .contact-alternatives {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .contact-alt-item {
+        background: var(--surface);
+        border: 1px solid #e5e7eb;
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+    .contact-alt-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .contact-alt-item strong {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: var(--text);
+    }
+    .contact-alt-item p {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin: 0;
+        line-height: 1.5;
+    }
+    .contact-alt-item a { color: var(--purple); }
+    .contact-alt-item a:hover { text-decoration: underline; }
+
+    /* ── Dark mode ── */
+    [data-theme="dark"] .contact-card,
+    [data-theme="dark"] .contact-success,
+    [data-theme="dark"] .contact-alt-item {
+        border-color: #333330;
+    }
+    [data-theme="dark"] .contact-intro {
+        border-bottom-color: #333330;
+    }
+    [data-theme="dark"] .contact-select {
+        background-color: #2c2c2a;
+        border-color: #444441;
+        color: var(--text);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+        .contact-hero { height: 220px; border-radius: 12px; }
+        .contact-hero-overlay h1 { font-size: 1.8rem; }
+        .contact-card { padding: 1.5rem; }
+        .contact-row { grid-template-columns: 1fr; }
+        .contact-alternatives { grid-template-columns: 1fr; }
+        .contact-submit { width: 100%; text-align: center; }
+    }
+</style>
+{% endblock %}
