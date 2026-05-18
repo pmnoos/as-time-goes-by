@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from .database import Base, engine
@@ -22,6 +23,11 @@ app = FastAPI(title="As Time Goes By")
 
 # Middleware MUST come before everything else
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "changeme"))
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return Response(status_code=204)
 
 
 # Mount static for main app and energy_calculator
