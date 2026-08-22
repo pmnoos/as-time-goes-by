@@ -1,23 +1,35 @@
 import os
 import logging
 import resend
+import html
 from dotenv import load_dotenv
 
 load_dotenv()
 
 resend.api_key = os.getenv("RESEND_API_KEY")
 
-# ── Change these to your real details ──
-FROM_EMAIL = "autobiography@autobiography.live"
-TO_EMAIL   = "petermagner3@gmail.com"  # whatever you actually check
+FROM_EMAIL = os.getenv("CONTACT_FROM_EMAIL", "autobiography@autobiography.live")
+TO_EMAIL = os.getenv("CONTACT_TO_EMAIL", "petermagner3@gmail.com")
 
 def send_contact_email(name: str, email: str, subject: str, message: str) -> bool:
     """
     Send a contact form submission email via Resend.
     Returns True on success, False on failure.
     """
-   
     try:
+        if not resend.api_key:
+            logging.error("Resend email failed: RESEND_API_KEY is missing")
+            return False
+
+        if not FROM_EMAIL or not TO_EMAIL:
+            logging.error("Resend email failed: CONTACT_FROM_EMAIL or CONTACT_TO_EMAIL is missing")
+            return False
+
+        safe_name = html.escape(name)
+        safe_email = html.escape(email)
+        safe_subject = html.escape(subject)
+        safe_message = html.escape(message)
+
         params = {
             "from": FROM_EMAIL,
             "to": [TO_EMAIL],
@@ -42,19 +54,19 @@ def send_contact_email(name: str, email: str, subject: str, message: str) -> boo
                                 <td style="padding: 0.5rem 0; color: #6b7280;
                                            font-size: 0.85rem; width: 80px;">Name</td>
                                 <td style="padding: 0.5rem 0; font-weight: 600;
-                                           color: #111827;">{name}</td>
+                                           color: #111827;">{safe_name}</td>
                             </tr>
                             <tr>
                                 <td style="padding: 0.5rem 0; color: #6b7280;
                                            font-size: 0.85rem;">Email</td>
                                 <td style="padding: 0.5rem 0;">
-                                    <a href="mailto:{email}" style="color: #7c3aed;">{email}</a>
+                                    <a href="mailto:{safe_email}" style="color: #7c3aed;">{safe_email}</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding: 0.5rem 0; color: #6b7280;
                                            font-size: 0.85rem;">Subject</td>
-                                <td style="padding: 0.5rem 0; color: #111827;">{subject}</td>
+                                <td style="padding: 0.5rem 0; color: #111827;">{safe_subject}</td>
                             </tr>
                         </table>
                         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 1.5rem 0;">
@@ -63,14 +75,14 @@ def send_contact_email(name: str, email: str, subject: str, message: str) -> boo
                                    margin: 0 0 0.75rem;">Message</h3>
                         <div style="background: #f9fafb; border-radius: 8px;
                                     padding: 1.25rem; color: #374151;
-                                    line-height: 1.7; white-space: pre-wrap;">{message}</div>
+                                    line-height: 1.7; white-space: pre-wrap;">{safe_message}</div>
                         <div style="margin-top: 1.5rem; text-align: center;">
-                            <a href="mailto:{email}?subject=Re: {subject}"
+                            <a href="mailto:{safe_email}?subject=Re: {safe_subject}"
                                style="display: inline-block; background: #7c3aed;
                                       color: #fff; padding: 0.6rem 1.5rem;
                                       border-radius: 8px; text-decoration: none;
                                       font-weight: 500; font-size: 0.9rem;">
-                                Reply to {name}
+                                Reply to {safe_name}
                             </a>
                         </div>
                     </div>
