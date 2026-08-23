@@ -43,11 +43,12 @@
         <div class="error" style="margin-bottom: 1.25rem;">{{ error }}</div>
         {% endif %}
 
-			<form
-				method="POST"
-				action="https://formspree.io/f/xeajdwaq"
-				class="contact-form"
+		<form
+    method="POST"
+    action="https://formspree.io/f/xeajdwaq"
+    class="contact-form"
 >
+    <input type="hidden" name="_subject" value="New message from As Time Goes By">
             <div class="contact-row">
                 <div class="form-group">
                     <label for="name">Your name <span class="required">*</span></label>
