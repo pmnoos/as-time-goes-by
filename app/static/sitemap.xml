@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <url>
+        <loc>https://blog-1b30f3bf.fastapicloud.dev/</loc>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
+        <loc>https://blog-1b30f3bf.fastapicloud.dev/blog</loc>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>https://blog-1b30f3bf.fastapicloud.dev/about</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://blog-1b30f3bf.fastapicloud.dev/about-me</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://blog-1b30f3bf.fastapicloud.dev/contact</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://blog-1b30f3bf.fastapicloud.dev/mortgage</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://blog-1b30f3bf.fastapicloud.dev/energy-calculator</loc>
+        <priority>0.8</priority>
+    </url>
+
+</urlset>

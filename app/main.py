@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from fastapi.responses import Response
+from fastapi.responses import Response, FileResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from .database import Base, engine
@@ -29,7 +29,14 @@ app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "change
 async def favicon():
     return Response(status_code=204)
 
+@app.get("/robots.txt", include_in_schema=False)
+async def robots():
+    return FileResponse("app/static/robots.txt", media_type="text/plain")
 
+
+@app.get("/sitemap.xml", include_in_schema=False)
+async def sitemap():
+    return FileResponse("app/static/sitemap.xml", media_type="application/xml")
 # Mount static for main app and energy_calculator
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.mount("/energy-static", StaticFiles(directory="app/energy_calculator/static"), name="energy_static")

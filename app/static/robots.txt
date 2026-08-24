@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blog-1b30f3bf.fastapicloud.dev/sitemap.xml

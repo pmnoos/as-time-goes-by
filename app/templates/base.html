@@ -2,10 +2,45 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}As Time Goes By{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
 
+    <!-- Basic SEO -->
+    <title>{% block title %}As Time Goes By | Retirement, Life & Everyday Living{% endblock %}</title>
+
+    <meta name="description"
+          content="{% block description %}As Time Goes By is a personal Australian blog about retirement, everyday life, money, housing, technology, wellbeing and the experiences that shape our later years.{% endblock %}">
+
+    <meta name="author" content="Peter Magner">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:title"
+          content="{% block og_title %}As Time Goes By | Retirement, Life & Everyday Living{% endblock %}">
+
+    <meta property="og:description"
+          content="{% block og_description %}Honest conversations and practical reflections about retirement, everyday life and everything in between.{% endblock %}">
+
+    <meta property="og:type" content="website">
+
+    <meta property="og:url" content="{{ request.url }}">
+
+    <meta property="og:site_name" content="As Time Goes By">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary">
+
+    <meta name="twitter:title"
+          content="{% block twitter_title %}As Time Goes By | Retirement & Everyday Life{% endblock %}">
+
+    <meta name="twitter:description"
+          content="{% block twitter_description %}Thoughts, stories and practical reflections on retirement and everyday life.{% endblock %}">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
+</head>
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

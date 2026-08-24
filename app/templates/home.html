@@ -9,7 +9,18 @@
     {% endif %}
 {% endblock %}
 
+{% block description %}
+    {% if category %}
+        Read articles about {{ category|capitalize }}, retirement and everyday life on As Time Goes By.
+    {% else %}
+        Read the latest articles from As Time Goes By — honest conversations about retirement, everyday life, money, housing, technology and everything in between.
+    {% endif %}
+{% endblock %}
+
 {% block content %}
+
+
+
 
 <!-- ── Category pills ── -->
 {% if CATEGORIES %}
