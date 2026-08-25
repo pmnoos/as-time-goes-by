@@ -37,13 +37,6 @@ async def robots():
 @app.get("/sitemap.xml", include_in_schema=False)
 async def sitemap():
     return FileResponse("app/static/sitemap.xml", media_type="application/xml")
-@app.get("/googlef4d68b79c1c91576.html", include_in_schema=False)
-async def google_verification():
-    return FileResponse(
-        "app/static/googlef4d68b79c1c91576.html",
-        media_type="text/html"
-    )
-
 # Mount static for main app and energy_calculator
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
