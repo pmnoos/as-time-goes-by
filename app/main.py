@@ -33,7 +33,12 @@ async def favicon():
 async def robots():
     return FileResponse("app/static/robots.txt", media_type="text/plain")
 
-
+@app.get("/googlef4d68b79c1c91576.html", include_in_schema=False)
+async def google_verification():
+    return FileResponse(
+        "app/static/googlef4d68b79c1c91576.html",
+        media_type="text/html"
+    )
 @app.get("/sitemap.xml", include_in_schema=False)
 async def sitemap():
     return FileResponse("app/static/sitemap.xml", media_type="application/xml")
