@@ -9,10 +9,12 @@ from .routers import router
 from .auth.routes import auth_router
 from sqladmin import Admin, ModelView
 from sqladmin.authentication import AuthenticationBackend
+from sqladmin.filters import BooleanFilter, ForeignKeyFilter, OperationColumnFilter, StaticValuesFilter
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 import os
 from pathlib import Path
+from .schemas import CATEGORIES
 from .templates_config import templates
 
 
@@ -102,9 +104,9 @@ class PostAdmin(ModelView, model=models.Post):
     column_searchable_list = [models.Post.title, models.Post.slug]
     column_sortable_list = [models.Post.created_at, models.Post.title]
     column_filters = [
-        models.Post.author_id,
-        models.Post.category,
-        models.Post.created_at,
+        ForeignKeyFilter(models.Post.author_id, models.User.username, models.User),
+        StaticValuesFilter(models.Post.category, values=list(CATEGORIES)),
+        OperationColumnFilter(models.Post.created_at),
     ]
     can_create = True
     can_edit = True
@@ -124,9 +126,9 @@ class CommentAdmin(ModelView, model=models.Comment):
     ]
     column_sortable_list = [models.Comment.created_at]
     column_filters = [
-        models.Comment.author_id,
-        models.Comment.post_id,
-        models.Comment.created_at,
+        ForeignKeyFilter(models.Comment.author_id, models.User.username, models.User),
+        ForeignKeyFilter(models.Comment.post_id, models.Post.title, models.Post),
+        OperationColumnFilter(models.Comment.created_at),
     ]
     can_create = False
     can_edit = False
@@ -183,8 +185,8 @@ class ContactMessageAdmin(ModelView, model=models.ContactMessage):
         models.ContactMessage.is_read,
     ]
     column_filters = [
-        models.ContactMessage.is_read,
-        models.ContactMessage.created_at,
+        BooleanFilter(models.ContactMessage.is_read),
+        OperationColumnFilter(models.ContactMessage.created_at),
     ]
     can_create = False
     can_edit = True
