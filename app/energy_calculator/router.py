@@ -3,13 +3,20 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from jinja2 import ChoiceLoader, FileSystemLoader
 from datetime import datetime
 from app.auth.dependencies import get_current_user
 import logging
+from pathlib import Path
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory=["app/energy_calculator/templates", "app/templates"])
+app_root = Path(__file__).resolve().parent.parent
+templates = Jinja2Templates(directory=str(app_root / "templates"))
+templates.env.loader = ChoiceLoader([
+    FileSystemLoader(str(app_root / "energy_calculator" / "templates")),
+    FileSystemLoader(str(app_root / "templates")),
+])
 
 logging.warning(f"[DEBUG] Type of templates after creation: {type(templates)}")
 

@@ -12,10 +12,13 @@ from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 import os
+from pathlib import Path
 from .templates_config import templates
 
 
 load_dotenv()
+
+APP_ROOT = Path(__file__).resolve().parent
 
 Base.metadata.create_all(bind=engine)
 
@@ -31,21 +34,25 @@ async def favicon():
 
 @app.get("/robots.txt", include_in_schema=False)
 async def robots():
-    return FileResponse("app/static/robots.txt", media_type="text/plain")
+    return FileResponse(APP_ROOT / "static/robots.txt", media_type="text/plain")
 
 @app.get("/googlef4d68b79c1c91576.html", include_in_schema=False)
 async def google_verification():
     return FileResponse(
-        "app/static/googlef4d68b79c1c91576.html",
+        APP_ROOT / "static/googlef4d68b79c1c91576.html",
         media_type="text/html"
     )
 @app.get("/sitemap.xml", include_in_schema=False)
 async def sitemap():
-    return FileResponse("app/static/sitemap.xml", media_type="application/xml")
+    return FileResponse(APP_ROOT / "static/sitemap.xml", media_type="application/xml")
 # Mount static for main app and energy_calculator
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-app.mount("/energy-static", StaticFiles(directory="app/energy_calculator/static"), name="energy_static")
+app.mount("/static", StaticFiles(directory=APP_ROOT / "static"), name="static")
+app.mount(
+    "/energy-static",
+    StaticFiles(directory=APP_ROOT / "energy_calculator" / "static"),
+    name="energy_static",
+)
 
 # Include routers
 app.include_router(router)
@@ -88,11 +95,17 @@ class PostAdmin(ModelView, model=models.Post):
         models.Post.id,
         models.Post.title,
         models.Post.slug,
+        models.Post.category,
         models.Post.author_id,
         models.Post.created_at,
     ]
     column_searchable_list = [models.Post.title, models.Post.slug]
     column_sortable_list = [models.Post.created_at, models.Post.title]
+    column_filters = [
+        models.Post.author_id,
+        models.Post.category,
+        models.Post.created_at,
+    ]
     can_create = True
     can_edit = True
     can_delete = True
@@ -110,6 +123,11 @@ class CommentAdmin(ModelView, model=models.Comment):
         models.Comment.created_at,
     ]
     column_sortable_list = [models.Comment.created_at]
+    column_filters = [
+        models.Comment.author_id,
+        models.Comment.post_id,
+        models.Comment.created_at,
+    ]
     can_create = False
     can_edit = False
     can_delete = True
@@ -163,6 +181,10 @@ class ContactMessageAdmin(ModelView, model=models.ContactMessage):
     column_sortable_list = [
         models.ContactMessage.created_at,
         models.ContactMessage.is_read,
+    ]
+    column_filters = [
+        models.ContactMessage.is_read,
+        models.ContactMessage.created_at,
     ]
     can_create = False
     can_edit = True

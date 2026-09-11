@@ -2,8 +2,11 @@ from fastapi.templating import Jinja2Templates
 from datetime import datetime
 from .schemas import CATEGORIES
 import re
+from pathlib import Path
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(
+    directory=str(Path(__file__).resolve().parent / "templates")
+)
 
 
 def strip_html(text: str) -> str:

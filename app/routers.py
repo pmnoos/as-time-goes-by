@@ -32,6 +32,7 @@ def slugify(text: str) -> str:
 def get_or_create_tags(db: Session, tag_names: list[str]) -> list:
     tags = []
     for name in tag_names:
+        name = name[:50]
         tag = db.query(models.Tag).filter(models.Tag.name == name).first()
         if not tag:
             tag = models.Tag(name=name)
@@ -199,7 +200,15 @@ def create_post_page(
         tags=post_tags_list,
     )
     db.add(post)
-    db.commit()
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        logging.exception("Failed to create post")
+        return templates.TemplateResponse(request, "create.html", {
+            "current_user": current_user,
+            "error": "Something went wrong saving your post, please try again",
+        })
     # FIX: redirect to the new post, not the landing page
     return RedirectResponse(url=f"/posts/{slug}", status_code=303)
 
