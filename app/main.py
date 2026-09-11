@@ -7,7 +7,7 @@ from .database import Base, engine
 from . import models
 from .routers import router
 from .auth.routes import auth_router
-from sqladmin import Admin, ModelView
+from sqladmin import Admin, BaseView, ModelView, expose
 from sqladmin.authentication import AuthenticationBackend
 from sqladmin.filters import BooleanFilter, ForeignKeyFilter, OperationColumnFilter, StaticValuesFilter
 from starlette.requests import Request
@@ -200,10 +200,20 @@ admin = Admin(
     title="As Time Goes By — Admin",
 )
 
+class ViewSiteLink(BaseView):
+    name = "View Live Site"
+    icon = "fa-solid fa-arrow-up-right-from-square"
+
+    @expose("/view-site", methods=["GET"])
+    async def view_site(self, request: Request):
+        return RedirectResponse(url="/blog")
+
+
 admin.add_view(PostAdmin)
 admin.add_view(CommentAdmin)
 admin.add_view(UserAdmin)
 admin.add_view(TagAdmin)
 admin.add_view(ContactMessageAdmin)
+admin.add_base_view(ViewSiteLink)
 
 
