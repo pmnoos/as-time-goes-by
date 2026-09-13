@@ -30,19 +30,22 @@
         <div class="form-group">
             <label>Tags</label>
             {% if available_tags %}
-            <div class="tag-select-list">
-                {% for tag in available_tags %}
-                <label class="tag-option">
-                    <input type="checkbox" name="selected_tags" value="{{ tag.name }}"
-                           {% if tag in post.tags %}checked{% endif %}>
-                    <span>{{ tag.name }}</span>
-                </label>
-                {% endfor %}
+            <div class="tag-select-box">
+                <input type="text" id="tag-search" placeholder="Search existing tags..." class="tag-search-input" onkeyup="filterTags()">
+                <div class="tag-select-list">
+                    {% for tag in available_tags %}
+                    <label class="tag-option">
+                        <input type="checkbox" name="selected_tags" value="{{ tag.name }}"
+                               {% if tag in post.tags %}checked{% endif %}>
+                        <span>{{ tag.name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
             </div>
             {% else %}
             <p class="hint">No tags yet. Add a new one below.</p>
             {% endif %}
-            <label for="new_tags" class="hint">Add new tag(s) if needed</label>
+            <label for="new_tags" class="hint" style="margin-top: 0.5rem; display: block;">Add new tag(s) if needed (comma separated)</label>
             <input type="text" id="new_tags" name="new_tags"
                    value="{{ post.tags | map(attribute='name') | reject('in', []) | list | join(', ') }}">
         </div>
@@ -77,6 +80,15 @@
 <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
 <script>
+function filterTags() {
+    const query = (document.getElementById('tag-search')?.value || '').toLowerCase();
+    const options = document.querySelectorAll('.tag-option');
+    options.forEach(opt => {
+        const text = opt.textContent.toLowerCase();
+        opt.style.display = text.includes(query) ? 'inline-flex' : 'none';
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const quill = new Quill('#quill-editor', {
         theme: 'snow',
