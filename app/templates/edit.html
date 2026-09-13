@@ -28,9 +28,23 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="tags">Tags <span class="hint">(comma separated)</span></label>
-            <input type="text" id="tags" name="tags"
-                   value="{{ post.tags | map(attribute='name') | join(', ') }}">
+            <label>Tags</label>
+            {% if available_tags %}
+            <div class="tag-select-list">
+                {% for tag in available_tags %}
+                <label class="tag-option">
+                    <input type="checkbox" name="selected_tags" value="{{ tag.name }}"
+                           {% if tag in post.tags %}checked{% endif %}>
+                    <span>{{ tag.name }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="hint">No tags yet. Add a new one below.</p>
+            {% endif %}
+            <label for="new_tags" class="hint">Add new tag(s) if needed</label>
+            <input type="text" id="new_tags" name="new_tags"
+                   value="{{ post.tags | map(attribute='name') | reject('in', []) | list | join(', ') }}">
         </div>
 
 

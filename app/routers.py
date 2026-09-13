@@ -31,8 +31,16 @@ def slugify(text: str) -> str:
 
 def get_or_create_tags(db: Session, tag_names: list[str]) -> list:
     tags = []
-    for name in tag_names:
+    seen = set()
+    for raw_name in tag_names:
+        name = raw_name.strip()
+        if not name:
+            continue
         name = name[:50]
+        normalized = name.lower()
+        if normalized in seen:
+            continue
+        seen.add(normalized)
         tag = db.query(models.Tag).filter(models.Tag.name == name).first()
         if not tag:
             tag = models.Tag(name=name)
@@ -40,6 +48,17 @@ def get_or_create_tags(db: Session, tag_names: list[str]) -> list:
             db.flush()
         tags.append(tag)
     return tags
+
+
+def parse_tag_names(selected_tags: list[str], new_tags: str) -> list[str]:
+    names = []
+    for value in selected_tags:
+        if value and value.strip():
+            names.append(value.strip())
+    for value in (new_tags or "").split(","):
+        if value and value.strip():
+            names.append(value.strip())
+    return names
 
 
 # ─────────────────────────────────────────────
@@ -150,9 +169,11 @@ def search(
 # ─────────────────────────────────────────────
 
 @router.get("/posts/new", response_class=HTMLResponse)
-def new_post_page(request: Request, current_user=Depends(require_user)):
+def new_post_page(request: Request, db: Session = Depends(get_db), current_user=Depends(require_user)):
+    available_tags = db.query(models.Tag).order_by(models.Tag.name.asc()).all()
     return templates.TemplateResponse(request, "create.html", {
         "current_user": current_user,
+        "available_tags": available_tags,
     })
 
 
@@ -162,7 +183,8 @@ def create_post_page(
     title: str = Form(...),
     body: str = Form(...),
     category: str = Form(...),
-    tags: str = Form(""),
+    selected_tags: list[str] = Form(default=[]),
+    new_tags: str = Form(""),
     cover_image: UploadFile = File(None),
     cover_caption: str = Form(default=""),
     db: Session = Depends(get_db),
@@ -171,8 +193,10 @@ def create_post_page(
     slug = slugify(title)
     existing = db.query(models.Post).filter(models.Post.slug == slug).first()
     if existing:
+        available_tags = db.query(models.Tag).order_by(models.Tag.name.asc()).all()
         return templates.TemplateResponse(request, "create.html", {
             "current_user": current_user,
+            "available_tags": available_tags,
             "error": "A post with that title already exists",
         })
 
@@ -181,12 +205,14 @@ def create_post_page(
     if cover_image and cover_image.filename:
         image_path = upload_image(cover_image.file, cover_image.filename)
         if image_path is None:
+            available_tags = db.query(models.Tag).order_by(models.Tag.name.asc()).all()
             return templates.TemplateResponse(request, "create.html", {
                 "current_user": current_user,
+                "available_tags": available_tags,
                 "error": "Image upload failed, please try again",
             })
 
-    tag_names = [t.strip() for t in tags.split(",") if t.strip()]
+    tag_names = parse_tag_names(selected_tags, new_tags)
     post_tags_list = get_or_create_tags(db, tag_names)
 
     post = models.Post(
@@ -205,8 +231,10 @@ def create_post_page(
     except Exception:
         db.rollback()
         logging.exception("Failed to create post")
+        available_tags = db.query(models.Tag).order_by(models.Tag.name.asc()).all()
         return templates.TemplateResponse(request, "create.html", {
             "current_user": current_user,
+            "available_tags": available_tags,
             "error": "Something went wrong saving your post, please try again",
         })
     # FIX: redirect to the new post, not the landing page
@@ -256,9 +284,11 @@ def edit_post_page(
         raise HTTPException(status_code=404, detail="Post not found")
     if post.author_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not your post")
+    available_tags = db.query(models.Tag).order_by(models.Tag.name.asc()).all()
     return templates.TemplateResponse(request, "edit.html", {
         "post": post,
         "current_user": current_user,
+        "available_tags": available_tags,
     })
 
 
@@ -269,7 +299,8 @@ def edit_post(
     title: str = Form(...),
     body: str = Form(...),
     category: str = Form(...),
-    tags: str = Form(""),
+    selected_tags: list[str] = Form(default=[]),
+    new_tags: str = Form(""),
     cover_image: UploadFile = File(default=None),
     cover_caption: str = Form(default=""),
     db: Session = Depends(get_db),
@@ -323,7 +354,7 @@ def edit_post(
             })
         post.cover_image = new_url
 
-    tag_names = [t.strip() for t in tags.split(",") if t.strip()]
+    tag_names = parse_tag_names(selected_tags, new_tags)
     post.tags = get_or_create_tags(db, tag_names)
 
     db.commit()
