@@ -390,6 +390,39 @@ a[href="/posts/new"]:hover { background-color: #25916a !important; }
 
 #quill-editor:focus-within { border-color: var(--purple); }
 
+.ql-toolbar .ql-table::before {
+    content: "Table";
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.prose table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.prose table th,
+.prose table td {
+    min-width: 7rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #d3d1c7;
+    text-align: left;
+    vertical-align: top;
+}
+
+.prose table th {
+    background: var(--bg);
+    font-weight: 700;
+}
+
+[data-theme="dark"] .prose table th,
+[data-theme="dark"] .prose table td {
+    border-color: #4a4a46;
+}
+
 .ql-toolbar {
     border: 1.5px solid #d3d1c7 !important;
     border-radius: 8px 8px 0 0 !important;
