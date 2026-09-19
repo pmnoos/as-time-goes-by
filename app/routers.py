@@ -326,7 +326,9 @@ def edit_post(
 
     post.title = title
     post.slug = new_slug
-    post.body = body
+    # Do not erase an existing post if a browser submits the editor fallback empty.
+    if body.strip() and body.strip() != "<p><br></p>":
+        post.body = body
     post.category = category
     post.cover_caption = cover_caption.strip() or None
 
