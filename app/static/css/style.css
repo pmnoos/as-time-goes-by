@@ -390,8 +390,9 @@ a[href="/posts/new"]:hover { background-color: #25916a !important; }
 
 #quill-editor:focus-within { border-color: var(--purple); }
 
-.ql-toolbar .ql-table::before {
-    content: "Table";
+.ql-toolbar button.ql-insertTable {
+    width: auto;
+    padding: 0 0.5rem;
     font-size: 0.75rem;
     font-weight: 600;
 }

@@ -14,6 +14,23 @@
 
         <div class="form-group">
             <label>Content</label>
+            <div id="quill-toolbar">
+                <span class="ql-formats">
+                    <select class="ql-header"><option value="1"></option><option value="2"></option><option value="3"></option><option selected></option></select>
+                    <button type="button" class="ql-bold"></button><button type="button" class="ql-italic"></button><button type="button" class="ql-underline"></button><button type="button" class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                    <button type="button" class="ql-list" value="ordered"></button><button type="button" class="ql-list" value="bullet"></button>
+                    <button type="button" class="ql-blockquote"></button><button type="button" class="ql-code-block"></button>
+                </span>
+                <span class="ql-formats">
+                    <button type="button" class="ql-link"></button><button type="button" class="ql-image"></button><button type="button" class="ql-video"></button>
+                    <select class="ql-color"></select><select class="ql-background"></select><select class="ql-align"></select>
+                </span>
+                <span class="ql-formats">
+                    <button type="button" class="ql-insertTable">Table</button><button type="button" class="ql-clean"></button>
+                </span>
+            </div>
             <div id="quill-editor"></div>
             <input type="hidden" name="body" id="body">
         </div>
@@ -102,21 +119,11 @@ document.addEventListener('DOMContentLoaded', function() {
             keyboard: {
                 bindings: quillBetterTable.keyboardBindings
             },
-            toolbar: [
-                [{ header: [1, 2, 3, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ list: 'ordered' }, { list: 'bullet' }],
-                ['blockquote', 'code-block'],
-                ['link', 'image', 'video'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'align': [] }],
-                ['table'],
-                ['clean']
-            ]
+            toolbar: '#quill-toolbar'
         }
     });
 
-    quill.getModule('toolbar').addHandler('table', function() {
+    quill.getModule('toolbar').addHandler('insertTable', function() {
         quill.getModule('better-table').insertTable(3, 3);
     });
 
