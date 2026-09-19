@@ -6,7 +6,8 @@
     <h1>Edit Post</h1>
     {% if error %}<div class="error">{{ error }}</div>{% endif %}
 
-    <form method="POST" action="/posts/{{ post.slug }}/edit" enctype="multipart/form-data" id="post-form">
+        <form method="POST" action="/posts/{{ post.slug }}/edit" enctype="multipart/form-data" id="post-form"
+            onsubmit="document.getElementById('body').value = document.querySelector('#quill-editor .ql-editor')?.innerHTML || ''; return true;">
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" id="title" name="title" required value="{{ post.title }}">
