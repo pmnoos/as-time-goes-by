@@ -15,9 +15,9 @@ from starlette.responses import RedirectResponse
 import os
 from pathlib import Path
 from .schemas import CATEGORIES
-from .templates_config import templates
-
-
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from .database import get_db
 load_dotenv()
 
 APP_ROOT = Path(__file__).resolve().parent
@@ -45,8 +45,43 @@ async def google_verification():
         media_type="text/html"
     )
 @app.get("/sitemap.xml", include_in_schema=False)
-async def sitemap():
-    return FileResponse(APP_ROOT / "static/sitemap.xml", media_type="application/xml")
+async def sitemap(db: Session = Depends(get_db)):
+    base_url = "https://blog-1b30f3bf.fastapicloud.dev"
+
+    urls = [
+        ("/", "1.0"),
+        ("/blog", "0.9"),
+        ("/about", "0.8"),
+        ("/about-me", "0.8"),
+        ("/contact", "0.7"),
+        ("/mortgage", "0.8"),
+        ("/energy-calculator", "0.8"),
+    ]
+
+    posts = (
+        db.query(models.Post)
+        .order_by(models.Post.created_at.desc())
+        .all()
+    )
+
+    for post in posts:
+        urls.append((f"/posts/{post.slug}", "0.8"))
+
+    xml = ['<?xml version="1.0" encoding="UTF-8"?>']
+    xml.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+    for path, priority in urls:
+        xml.append("    <url>")
+        xml.append(f"        <loc>{base_url}{path}</loc>")
+        xml.append(f"        <priority>{priority}</priority>")
+        xml.append("    </url>")
+
+    xml.append("</urlset>")
+
+    return Response(
+        "\n".join(xml),
+        media_type="application/xml"
+    )
 # Mount static for main app and energy_calculator
 
 app.mount("/static", StaticFiles(directory=APP_ROOT / "static"), name="static")
