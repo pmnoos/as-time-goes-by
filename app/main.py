@@ -6,6 +6,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from .database import Base, engine
 from . import models
 from .routers import router
+from .schemas import CATEGORIES
 from .auth.routes import auth_router
 from sqladmin import Admin, BaseView, ModelView, expose
 from sqladmin.authentication import AuthenticationBackend
@@ -17,6 +18,7 @@ from pathlib import Path
 from .schemas import CATEGORIES
 from fastapi import Depends
 from sqlalchemy.orm import Session
+
 from .database import get_db
 load_dotenv()
 
@@ -57,6 +59,9 @@ async def sitemap(db: Session = Depends(get_db)):
         ("/mortgage", "0.8"),
         ("/energy-calculator", "0.8"),
     ]
+
+    for category, _label in CATEGORIES:
+        urls.append((f"/blog/category/{category}", "0.7"))
 
     posts = (
         db.query(models.Post)
