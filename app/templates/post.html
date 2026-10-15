@@ -268,4 +268,17 @@
     </div>
 </div>
 
+<script>
+// Open mailto: links in the post body in Gmail instead of the default mail app.
+document.querySelectorAll('.prose a[href^="mailto:"]').forEach(function (a) {
+    const url = new URL(a.getAttribute('href'));
+    const params = new URLSearchParams(url.search);
+    const gmail = new URLSearchParams({ view: 'cm', fs: '1', to: decodeURIComponent(url.pathname) });
+    ['subject', 'body', 'cc', 'bcc'].forEach(function (k) { if (params.get(k)) gmail.set(k, params.get(k)); });
+    a.href = 'https://mail.google.com/mail/?' + gmail.toString();
+    a.target = '_blank';
+    a.rel = 'noopener';
+});
+</script>
+
 {% endblock %}
