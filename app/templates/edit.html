@@ -94,9 +94,9 @@
           onsubmit="return confirm('Are you sure you want to delete this post? This cannot be undone.')"></form>
 </div>
 
-<link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-dev.3/dist/quill.snow.css" rel="stylesheet">
 <link href="/static/css/quill-better-table.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-dev.3/dist/quill.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill-better-table@1.2.10/dist/quill-better-table.min.js"></script>
 <script>
 function filterTags() {
@@ -123,12 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    quill.getModule('toolbar').addHandler('insertTable', function() {
+    document.querySelector('.ql-insertTable').addEventListener('click', function() {
+        quill.focus();
+        if (!quill.getSelection()) quill.setSelection(quill.getLength() - 1, 0);
         quill.getModule('better-table').insertTable(3, 3);
     });
 
-    // Pre-populate with existing content
-    quill.root.innerHTML = {{ post.body | tojson }};
+    // Load the saved post into the editor.
+    quill.clipboard.dangerouslyPasteHTML({{ post.body | tojson }}, 'silent');
 
     document.getElementById('post-form').addEventListener('submit', function(e) {
         document.getElementById('body').value = quill.root.innerHTML;
