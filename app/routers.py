@@ -639,9 +639,19 @@ def about_me_page(request: Request, current_user=Depends(get_current_user)):
         "current_user": current_user,
     })
     
+
+@router.get("/useful-contacts", response_class=HTMLResponse)
+def useful_contacts_page(
+    request: Request,
+    current_user=Depends(get_current_user),
+):
+    return templates.TemplateResponse(
+        request,
+        "useful_contacts.html",
+        {"current_user": current_user},
+    )
     
- # ── Add these imports to the top of your routers.py ──
-# from .email import send_contact_email
+
 
 # ── Add this import to your existing imports ──
 # from . import models  (already there)

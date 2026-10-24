@@ -58,6 +58,7 @@ async def sitemap(db: Session = Depends(get_db)):
         ("/contact", "0.7"),
         ("/mortgage", "0.8"),
         ("/energy-calculator", "0.8"),
+        ("/useful-contacts", "0.7"),
     ]
 
     for category, _label in CATEGORIES:
