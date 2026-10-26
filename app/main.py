@@ -232,6 +232,42 @@ class ContactMessageAdmin(ModelView, model=models.ContactMessage):
     can_create = False
     can_edit = True
     can_delete = True
+    
+class UsefulContactAdmin(ModelView, model=models.Contact):
+    name = "Useful Contact"
+    name_plural = "Useful Contacts"
+    icon = "fa-solid fa-address-book"
+
+    column_list = [
+        models.Contact.id,
+        models.Contact.name,
+        models.Contact.category,
+        models.Contact.website,
+        models.Contact.phone,
+        models.Contact.is_published,
+        models.Contact.display_order,
+    ]
+
+    column_searchable_list = [
+        models.Contact.name,
+        models.Contact.category,
+    ]
+
+    column_sortable_list = [
+        models.Contact.name,
+        models.Contact.category,
+        models.Contact.display_order,
+    ]
+
+    column_filters = [
+        BooleanFilter(models.Contact.is_published),
+    ]
+
+    can_create = True
+    can_edit = True
+    can_delete = True
+print("Admin username configured:", bool(os.getenv("ADMIN_USERNAME")))
+print("Admin password configured:", bool(os.getenv("ADMIN_PASSWORD")))
 # Mount admin AFTER middleware
 authentication_backend = AdminAuth(secret_key=os.getenv("SECRET_KEY", "changeme"))
 admin = Admin(
@@ -255,6 +291,7 @@ admin.add_view(CommentAdmin)
 admin.add_view(UserAdmin)
 admin.add_view(TagAdmin)
 admin.add_view(ContactMessageAdmin)
+admin.add_view(UsefulContactAdmin)
 admin.add_base_view(ViewSiteLink)
 
 

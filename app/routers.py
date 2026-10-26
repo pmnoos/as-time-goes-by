@@ -640,17 +640,32 @@ def about_me_page(request: Request, current_user=Depends(get_current_user)):
     })
     
 
+
 @router.get("/useful-contacts", response_class=HTMLResponse)
 def useful_contacts_page(
     request: Request,
+    db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
+    contacts = (
+        db.query(models.Contact)
+        .filter(models.Contact.is_published.is_(True))
+        .order_by(
+            models.Contact.display_order.asc(),
+            models.Contact.name.asc(),
+        )
+        .all()
+        )
+   
     return templates.TemplateResponse(
         request,
         "useful_contacts.html",
-        {"current_user": current_user},
+        {
+            "current_user": current_user,
+            "contacts": contacts,
+        },
     )
-    
+
 
 
 # ── Add this import to your existing imports ──

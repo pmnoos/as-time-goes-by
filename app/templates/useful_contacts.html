@@ -30,131 +30,63 @@ A helpful collection of Australian organisations offering information about aged
         </p>
     </header>
 
-    <div class="space-y-8">
+    {% if contacts %}
 
-        <section class="border rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-3">
-                Rights and Advocacy
-            </h2>
+        <div class="space-y-8">
 
-            <h3 class="text-xl font-medium mb-2">ADA Australia</h3>
+            {% for contact in contacts %}
 
-            <p class="mb-3 leading-relaxed">
-                ADA Australia provides advocacy and support for older
-                people and people with disability, including assistance
-                with understanding rights and navigating services.
+                <section class="border rounded-lg p-6">
+
+                    <h2 class="text-2xl font-semibold mb-3">
+                        {{ contact.category }}
+                    </h2>
+
+                    <h3 class="text-xl font-medium mb-2">
+                        {{ contact.name }}
+                    </h3>
+
+                    <p class="mb-3 leading-relaxed">
+                        {{ contact.description }}
+                    </p>
+
+                    {% if contact.phone %}
+                        <p class="mb-3">
+                            <strong>Phone:</strong>
+                            <a href="tel:{{ contact.phone }}"
+                               class="text-blue-700 underline">
+                                {{ contact.phone }}
+                            </a>
+                        </p>
+                    {% endif %}
+
+                    {% if contact.website %}
+                        <p>
+                            <a href="{{ contact.website }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="text-blue-700 underline font-medium">
+                                Visit {{ contact.name }} website
+                            </a>
+                        </p>
+                    {% endif %}
+
+                </section>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="border rounded-lg p-6">
+            <p class="leading-relaxed">
+                We're currently updating our useful contacts directory.
+                Please check back soon.
             </p>
+        </div>
 
-            <a href="https://adaaustralia.com.au"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-blue-700 underline font-medium">
-                Visit ADA Australia
-            </a>
-        </section>
-
-        <section class="border rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-3">
-                Government Services and Concessions
-            </h2>
-
-            <h3 class="text-xl font-medium mb-2">
-                Queensland Government
-            </h3>
-
-            <p class="mb-3 leading-relaxed">
-                Find information about Queensland Government services,
-                concessions, transport, housing and support available
-                to residents.
-            </p>
-
-            <a href="https://www.qld.gov.au"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-blue-700 underline font-medium">
-                Visit Queensland Government
-            </a>
-        </section>
-
-        <section class="border rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-3">
-                Seniors' Information and Benefits
-            </h2>
-
-            <h3 class="text-xl font-medium mb-2">
-                National Seniors Australia
-            </h3>
-
-            <p class="mb-3 leading-relaxed">
-                National Seniors Australia provides information and
-                advocacy on issues affecting older Australians.
-                Membership also includes access to member benefits
-                and discounts, including its EAT | PLAY | SAVE app.
-                Check the organisation's website for current
-                membership details.
-            </p>
-
-            <a href="https://nationalseniors.com.au"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-blue-700 underline font-medium">
-                Visit National Seniors Australia
-            </a>
-        </section>
-
-        <section class="border rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-3">
-                Local Representation
-            </h2>
-
-            <h3 class="text-xl font-medium mb-2">
-                Wendy Bourne — Member for Ipswich West
-            </h3>
-
-            <p class="mb-3 leading-relaxed">
-                Contact your local representative for information
-                about local issues, community concerns and assistance
-                with matters that may require government attention.
-            </p>
-
-            <a href="https://wendybourne.com.au"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-blue-700 underline font-medium">
-                Visit Wendy Bourne's website
-            </a>
-        </section>
-
-        <section class="border rounded-lg p-6">
-            <h2 class="text-2xl font-semibold mb-3">
-                Help at Home and Aged Care
-            </h2>
-
-            <h3 class="text-xl font-medium mb-2">My Aged Care</h3>
-
-            <p class="mb-3 leading-relaxed">
-                My Aged Care is the Australian Government's starting
-                point for information about aged care services,
-                eligibility and support options for older people.
-            </p>
-
-            <p class="mb-3">
-                <strong>Phone:</strong>
-                <a href="tel:1800200422"
-                   class="text-blue-700 underline">
-                    1800 200 422
-                </a>
-            </p>
-
-            <a href="https://www.myagedcare.gov.au"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-blue-700 underline font-medium">
-                Visit My Aged Care
-            </a>
-        </section>
-
-    </div>
+    {% endif %}
 
     <div class="mt-10 border-t pt-6">
         <p class="text-sm leading-relaxed">

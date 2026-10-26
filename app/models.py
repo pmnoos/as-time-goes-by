@@ -75,3 +75,24 @@ class ContactMessage(Base):
 
     def __repr__(self):
         return f"<ContactMessage from {self.name} ({self.email})>"    
+    
+    
+    
+# ── Useful Contacts ──
+
+class Contact(Base):
+    __tablename__ = "useful_contacts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(200), nullable=False)
+    category = Column(String(100), nullable=False)
+    description = Column(Text, nullable=False)
+    website = Column(String(500), nullable=True)
+    phone = Column(String(50), nullable=True)
+    display_order = Column(Integer, default=0, nullable=False)
+    is_published = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    def __repr__(self):
+        return f"<Contact {self.name}>"
