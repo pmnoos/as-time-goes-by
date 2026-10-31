@@ -125,11 +125,11 @@
                         <div class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/40
                                     flex items-center justify-center text-brand-700 dark:text-brand-300
                                     text-sm font-bold">
-                            {{ comment.author.username[0]|upper }}
+                            {{ comment.display_name[0]|upper }}
                         </div>
                         <div>
                             <span class="font-medium text-sm text-gray-800 dark:text-slate-200">
-                                {{ comment.author.username }}
+                                {{ comment.display_name  }}
                             </span>
                             <span class="text-xs text-gray-400 dark:text-slate-500 ml-2">
                                 {{ comment.created_at.strftime('%b %d, %Y at %H:%M') }}
@@ -157,40 +157,74 @@
         </div>
         {% endif %}
 
-        <!-- Comment form -->
-        {% if current_user %}
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100
-                    dark:border-slate-700 p-6 shadow-sm">
-            <h3 class="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-4">Leave a comment</h3>
-            <form method="POST" action="/posts/{{ post.slug }}/comments">
-                <div class="mb-4">
-                    <textarea id="body" name="body" rows="4" required
-                        placeholder="Write your comment…"
-                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600
-                               bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100
-                               text-sm placeholder-gray-400 dark:placeholder-slate-500
-                               focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent
-                               transition resize-none">
-                    </textarea>
-                </div>
-                <button type="submit"
-                        class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-sm
-                               font-medium rounded-lg transition-colors">
-                    Post comment
-                </button>
-            </form>
-        </div>
-        {% else %}
-        <div class="bg-gray-50 dark:bg-slate-800 rounded-xl border border-gray-100
-                    dark:border-slate-700 p-6 text-center">
-            <p class="text-gray-500 dark:text-slate-400 text-sm">
-                <a href="/login" class="text-brand-600 dark:text-brand-400 font-medium hover:underline">
-                    Log in
-                </a>
-                to leave a comment.
-            </p>
+             <!-- Comment form -->
+        {% if request.query_params.get('submitted') %}
+        <div class="mb-4 rounded-xl border border-green-200 bg-green-50 p-4 text-green-800
+                    dark:border-green-800 dark:bg-green-900/20 dark:text-green-300">
+            Thank you! Your comment is waiting for approval and will appear soon.
         </div>
         {% endif %}
+
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100
+                    dark:border-slate-700 p-6 shadow-sm">
+            <h3 class="font-serif text-xl font-semibold text-gray-900 dark:text-white mb-1">Join the conversation</h3>
+            <p class="text-sm text-gray-500 dark:text-slate-400 mb-4">
+                We'd love to hear your thoughts or memories. Share them below.
+            </p>
+            <form method="POST" action="/posts/{{ post.slug }}/comments">
+
+                {% if not current_user %}
+                <div class="mb-4">
+                    <label for="guest_name" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+                        Your first name
+                    </label>
+                    <input type="text" id="guest_name" name="guest_name" required maxlength="60"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600
+                               bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 text-base
+                               focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent">
+                </div>
+                <div class="mb-4">
+                    <label for="guest_email" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+                        Email (optional, never shown publicly)
+                    </label>
+                    <input type="email" id="guest_email" name="guest_email" maxlength="100"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600
+                               bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 text-base
+                               focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent">
+                </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    <label for="body" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+                        Your comment
+                    </label>
+                    <textarea id="body" name="body" rows="5" required maxlength="3000"
+                        placeholder="Write your comment here…"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600
+                               bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100
+                               text-base placeholder-gray-400 dark:placeholder-slate-500
+                               focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent
+                               transition resize-none"></textarea>
+                </div>
+
+                <!-- Hidden spam trap: real visitors never see or fill this -->
+                <div style="position:absolute; left:-9999px;" aria-hidden="true">
+                    <label for="website">Leave this empty</label>
+                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+
+                <button type="submit"
+                        class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white text-base
+                               font-medium rounded-lg transition-colors">
+                    Post your comment
+                </button>
+                {% if not current_user %}
+                <p class="mt-3 text-xs text-gray-500 dark:text-slate-400">
+                    Comments appear once they have been approved.
+                </p>
+                {% endif %}
+            </form>
+        </div>
     </section>
 </article>
 

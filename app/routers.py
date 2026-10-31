@@ -258,6 +258,7 @@ def post_page(
     comments = (
         db.query(models.Comment)
         .filter(models.Comment.post_id == post.id)
+        .filter(models.Comment.approved == True)
         .order_by(models.Comment.created_at.asc())
         .all()
     )
@@ -391,27 +392,55 @@ def delete_post_page(
 # ─────────────────────────────────────────────
 # COMMENTS
 # ─────────────────────────────────────────────
-
 @router.post("/posts/{slug}/comments", response_class=HTMLResponse)
 def add_comment(
     slug: str,
     request: Request,
     body: str = Form(...),
+    guest_name: str = Form(""),
+    guest_email: str = Form(""),
+    website: str = Form(""),   # hidden spam trap, real people leave it empty
     db: Session = Depends(get_db),
-    current_user=Depends(require_user),
+    current_user=Depends(get_current_user),
 ):
     post = db.query(models.Post).filter(models.Post.slug == slug).first()
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
+
+    # Spam bots fill in the hidden field. Pretend it worked and save nothing.
+    if website.strip():
+        return RedirectResponse(url=f"/posts/{slug}", status_code=303)
+
+    body = body.strip()[:3000]
+    if not body:
+        return RedirectResponse(url=f"/posts/{slug}", status_code=303)
+
+    if current_user:
+        # Logged-in members appear straight away
+        comment = models.Comment(
+            body=body,
+            post_id=post.id,
+            author_id=current_user.id,
+            approved=True,
+        )
+        db.add(comment)
+        db.commit()
+        return RedirectResponse(url=f"/posts/{slug}", status_code=303)
+
+    # Visitors: wait for approval
+    name = guest_name.strip()[:60]
+    if not name:
+        return RedirectResponse(url=f"/posts/{slug}", status_code=303)
     comment = models.Comment(
         body=body,
         post_id=post.id,
-        author_id=current_user.id,
+        guest_name=name,
+        guest_email=guest_email.strip()[:100] or None,
+        approved=False,
     )
     db.add(comment)
     db.commit()
-    return RedirectResponse(url=f"/posts/{slug}", status_code=303)
-
+    return RedirectResponse(url=f"/posts/{slug}?submitted=1", status_code=303)
 
 @router.post("/posts/{slug}/comments/{comment_id}/delete", response_class=HTMLResponse)
 def delete_comment(

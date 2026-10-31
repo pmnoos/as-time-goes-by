@@ -26,6 +26,13 @@ APP_ROOT = Path(__file__).resolve().parent
 
 Base.metadata.create_all(bind=engine)
 
+# Add the new comment columns to existing databases (safe to run every time)
+try:
+    from .migrate import add_comment_columns
+    add_comment_columns(engine)
+except Exception as e:
+    print("Comment column migration skipped:", e)
+
 app = FastAPI(title="As Time Goes By")
 
 # Middleware MUST come before everything else
@@ -160,21 +167,27 @@ class CommentAdmin(ModelView, model=models.Comment):
     icon = "fa-solid fa-comments"
     column_list = [
         models.Comment.id,
+        models.Comment.approved,
+        models.Comment.guest_name,
+        models.Comment.guest_email,
         models.Comment.body,
         models.Comment.author_id,
         models.Comment.post_id,
         models.Comment.created_at,
     ]
-    column_sortable_list = [models.Comment.created_at]
+    column_sortable_list = [models.Comment.created_at, models.Comment.approved]
     column_filters = [
         ForeignKeyFilter(models.Comment.author_id, models.User.username, models.User),
         ForeignKeyFilter(models.Comment.post_id, models.Post.title, models.Post),
         OperationColumnFilter(models.Comment.created_at),
     ]
+    form_columns = [
+        models.Comment.approved,
+        models.Comment.body,
+    ]
     can_create = False
-    can_edit = False
+    can_edit = True
     can_delete = True
-
 
 class UserAdmin(ModelView, model=models.User):
     name = "User"

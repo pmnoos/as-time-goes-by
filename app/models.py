@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Table, Boolean
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, expression
 from .database import Base
 from datetime import datetime
 
@@ -51,14 +51,28 @@ class Tag(Base):
 class Comment(Base):
     __tablename__ = "comments"
 
-    id         = Column(Integer, primary_key=True, index=True)
-    body       = Column(Text, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    post_id    = Column(Integer, ForeignKey("posts.id"))
-    author_id  = Column(Integer, ForeignKey("users.id"))
+    id          = Column(Integer, primary_key=True, index=True)
+    body        = Column(Text, nullable=False)
+    created_at  = Column(DateTime(timezone=True), server_default=func.now())
+    post_id     = Column(Integer, ForeignKey("posts.id"))
+    author_id   = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+    # For visitors who are not logged in
+    guest_name  = Column(String(60), nullable=True)
+    guest_email = Column(String(100), nullable=True)   # never shown publicly
+
+    # New comments wait for approval; existing ones stay visible
+    approved    = Column(Boolean, nullable=False, default=False,
+                         server_default=expression.true())
 
     post   = relationship("Post", back_populates="comments")
-    author = relationship("User", back_populates="comments")    
+    author = relationship("User", back_populates="comments")
+
+    @property
+    def display_name(self):
+        if self.author:
+            return self.author.username
+        return self.guest_name or "A reader"  
     
 # ── Add this class to your existing models.py ──
 
