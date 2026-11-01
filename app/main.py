@@ -18,7 +18,7 @@ from pathlib import Path
 from .schemas import CATEGORIES
 from fastapi import Depends
 from sqlalchemy.orm import Session
-
+from markupsafe import Markup, escape
 from .database import get_db
 load_dotenv()
 
@@ -172,10 +172,15 @@ class CommentAdmin(ModelView, model=models.Comment):
         models.Comment.guest_email,
         models.Comment.body,
         models.Comment.author_id,
-        models.Comment.post_id,
+        models.Comment.post,
         models.Comment.created_at,
     ]
     column_sortable_list = [models.Comment.created_at, models.Comment.approved]
+    column_formatters = {
+        models.Comment.post: lambda m, a: Markup(
+            f'<a href="/posts/{escape(m.post.slug)}" target="_blank">{escape(m.post.title)}</a>'
+        ) if m.post else "",
+    }
     column_filters = [
         ForeignKeyFilter(models.Comment.author_id, models.User.username, models.User),
         ForeignKeyFilter(models.Comment.post_id, models.Post.title, models.Post),
