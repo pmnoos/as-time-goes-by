@@ -26,3 +26,4 @@ alembic/versions/*.pyc
 .ipynb_checkpoints/
 .mypy_cache/
 .pytest_cache/
+.env
